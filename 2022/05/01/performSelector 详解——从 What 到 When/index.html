@@ -19,22 +19,22 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="performSelector 详解——从 What 到 When 缘起  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？  performSelector 的使用  使用场景     参考资料   缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2022/04/23/hello-world/index.html">
+<meta property="og:title" content="performSelector 详解——从 What 到 When">
+<meta property="og:url" content="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="performSelector 详解——从 What 到 When 缘起  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？  performSelector 的使用  使用场景     参考资料   缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-04-23T08:02:31.780Z">
-<meta property="article:modified_time" content="2022-04-23T08:02:31.780Z">
+<meta property="article:published_time" content="2022-05-01T14:55:14.000Z">
+<meta property="article:modified_time" content="2022-05-01T14:11:01.878Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Hello World · wymann01&#39;s Studio</title>
+    <title>performSelector 详解——从 What 到 When · wymann01&#39;s Studio</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -259,7 +259,7 @@
                 <a href="/">wymann01&#39;s Studio.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Hello World</a>
+                <a href="#" class="post-name">performSelector 详解——从 What 到 When</a>
             </div>
         </div>
     
@@ -305,7 +305,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Hello World
+                performSelector 详解——从 What 到 When
             <!-- 404 -->
             
         </h1>
@@ -324,13 +324,13 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">75</span>Reading time: <span class="post-count reading-time">1 min</span></span>
+                        <span>Word count: <span class="post-count word-count">1.2k</span>Reading time: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2022/04/23</span>
+                    <span class="post-intro-time">2022/05/01</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -485,28 +485,83 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+        <h1 id="performSelector-详解——从-What-到-When"><a href="#performSelector-详解——从-What-到-When" class="headerlink" title="performSelector 详解——从 What 到 When"></a>performSelector 详解——从 What 到 When</h1><ul>
+<li><p><a href="#%E7%BC%98%E8%B5%B7">缘起</a></p>
+<ul>
+<li><p><a href="#performselector-%E6%98%AF%E6%88%91%E4%BB%AC%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95%E8%83%BD%E4%B8%8D%E8%83%BD%E4%BB%8E-runloop-%E7%9A%84%E8%A7%92%E5%BA%A6%E8%AF%B4%E8%AF%B4">performSelector 是我们常用的方法，能不能从 runloop 的角度说说？</a></p>
+</li>
+<li><p><a href="#performselector-%E8%B7%9F%E6%88%91%E4%BB%AC%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">performSelector 跟我们直接调用一个方法有什么区别？</a></p>
+</li>
+<li><p><a href="#performselector-%E7%9A%84%E4%BD%BF%E7%94%A8">performSelector 的使用</a></p>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></p>
+</li>
+</ul>
+<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>我最近被一位面试官问：</p>
+<ul>
+<li><p><code>performSelector</code> 是我们常用的方法，能不能从 <code>runloop</code> 的角度说说？</p>
+</li>
+<li><p><code>performSelector</code> 跟我们直接调用一个方法有什么区别？</p>
+</li>
+</ul>
+<p>一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连<code>performSelector</code> 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！</p>
+<h2 id="performSelector-是我们常用的方法，能不能从-runloop-的角度说说？"><a href="#performSelector-是我们常用的方法，能不能从-runloop-的角度说说？" class="headerlink" title="performSelector 是我们常用的方法，能不能从 runloop 的角度说说？"></a>performSelector 是我们常用的方法，能不能从 runloop 的角度说说？</h2><blockquote>
+<p>这个方法的入参是一个 selector，selector 属于 SEL类型，用来代表一个函数，实际上是一个 C 的 string。打印一个 selector 会得到对应方法的名字。详见<a href="https://developer.apple.com/documentation/objectivec/sel" title="官方文档">官方文档</a>。</p>
+</blockquote>
+<p>这里他要问的其实是<code>performSelector:withObject:afterDelay</code> 方法（Apple文档在<a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="这里">这里</a>），只有这个才跟 runloop 有关系。这个方法会生成一个定时器Timer，并把它添加到当前线程的 Runloop 上，到了预定时间后 Runloop 好去执行对应的 selector （即执行方法）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+(void)performSelectorInMainThread &#123;</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(void)test &#123;</span><br><span class="line">    NSLog(@&quot;This is test method&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>注意：如果是在<strong>子线程</strong>中调用performSelector:withObject:afterDelay 方法，那就得手动获取一下 runloop，同时得让子线程中的 runloop 处于 run 状态。<strong>因为子线程中的 Runloop 不是默认创建，更不会默认 Run 起来。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+(void)performSelectorInOtherThread &#123;</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">        NSLog(@&quot;1&quot;);</span><br><span class="line">        NSRunLoop *runloop = [NSRunLoop currentRunLoop]; // 注释这句,则不会执行 test 方法</span><br><span class="line">        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];</span><br><span class="line">        [runloop run];// 注释这句,也不会执行 test 方法； </span><br><span class="line">        //同时，这句需要放在 performSelector 后面，对应的 timer 才会被添加到 Runloop 中</span><br><span class="line">        NSLog(@&quot;3&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(void)test &#123;</span><br><span class="line">    NSLog(@&quot;This is test method&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里其实也可以引申两个问题：<br>1. 如何查看Runloop 拥有的「源」？<br>2. Runloop 在什么时候会退出？（在本示例代码中，“3”是在 Runloop退出的时候打印的，那 Runloop 怎么为啥会退出？）<br>想了解详情，请看<a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a></p>
+</blockquote>
+<h2 id="performSelector-跟我们直接调用一个方法有什么区别？"><a href="#performSelector-跟我们直接调用一个方法有什么区别？" class="headerlink" title="performSelector 跟我们直接调用一个方法有什么区别？"></a>performSelector 跟我们直接调用一个方法有什么区别？</h2><p><code>performSelector</code>是运行时决议的，用<code>performSelector</code> 可以到运行时才决定要执行哪个方法，因此编译器不会检查 <code>performSelector</code>的入参所代表的<strong>方法</strong>是否已经被 <code>caller</code> 对象实现。（因此，这时你可以在「不 import 头文件」的情况下调用方法）</p>
+<p>而对于一般的方法调用，编译器会严格把控当前 caller 是否实现了该方法，如果没有，根本过不了编译。</p>
+<p>这就类似于 Java 语言中的「反射」机制。</p>
+<h2 id="performSelector-的使用"><a href="#performSelector-的使用" class="headerlink" title="performSelector 的使用"></a>performSelector 的使用</h2><p>因为对应的 selector 有可能实现，也可能没实现，所以它尝尝跟<code>respondsToSelector:</code> 搭配使用，如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 检查 self 对象是否实现了 test 方法</span><br><span class="line">if([self respondsToSelector:@selector(test)]) &#123;</span><br><span class="line">    [self performSelector:@selector(test)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>另外，根据 Apple 的文档描述，performSelector 可能会带来内存管理问题：</p>
+<blockquote>
+<p>But use caution when doing this. Different messages require different memory management strategies for their returned objects, and it might not be obvious which to use.<br>Usually the caller isn’t responsible for the memory of a returned object, but that’s not true when the selector is one of the creation methods, such as <a href="https://developer.apple.com/documentation/objectivec/nsobject/1418807-copy" title="copy">copy</a>. See <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html#//apple_ref/doc/uid/20000994" title="Memory Management Policy">Memory Management Policy</a> in <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i" title="Advanced Memory Management Programming Guide">Advanced Memory Management Programming Guide</a> for a description of ownership expectations. Depending on the structure of your code, it might not be clear which kind of selector you are using for any given invocation.<br>Due to this uncertainty, the compiler generates a warning if you supply a variable selector while using ARC to manage memory. Because it can’t determine ownership of the returned object at compile-time, ARC makes the assumption that the caller does <em>not</em> need to take ownership, but this may not be true. The compiler warning alerts you to the potential for a memory leak.</p>
+</blockquote>
+<p>大意是，如果提供的 selector 是构造方法，那么可能会带来所有权的不确定，进一步导致<strong>内存泄漏</strong>的问题。如果确定 selector 不会返回值，建议改用<a href="https://developer.apple.com/documentation/objectivec/nsobject/1414900-performselectoronmainthread" title="performSelectorOnMainThread:withObject:waitUntilDone:">performSelectorOnMainThread:withObject:waitUntilDone:</a> 。也可以改用 NSInvokation，构建一个可以返回值的 message（selector 可以被看做是一个 message，因为 Objective-C 调用方法的方式是「消息转发」）</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li><p>动态化和组件化</p>
+</li>
+<li><p>多线程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 主线程</span><br><span class="line">- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array;</span><br><span class="line"></span><br><span class="line">// 子线程</span><br><span class="line">- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>延后执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[self performSelector:@selector(test) withObject:nil afterDelay:1.0];</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p><a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="performSelector:withObject:afterDelay 的文档">performSelector:withObject:afterDelay 的文档</a></p>
+</li>
+<li><p><a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a>（Runloop 退出时机）</p>
+</li>
+<li><p><a href="https://juejin.cn/post/6844903838550327304#heading-1" title="关于 performSelector 看我就够了">关于 performSelector 看我就够了</a>（使用场景）</p>
+</li>
+<li><p><a href="https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418867-performselector/" title="performSelector 可能导致的内存管理问题（Apple 文档）">performSelector 可能导致的内存管理问题（Apple 文档）</a></p>
+</li>
+</ul>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>Author：<a href="http://example.com">John Doe</a>
-            <p>Link：<a href="http://example.com/2022/04/23/hello-world/">http://example.com/2022/04/23/hello-world/</a>
-            <p>Publish date：<a href="http://example.com/2022/04/23/hello-world/">April 23rd 2022, 4:02:31 pm</a>
-            <p>Update date：<a href="http://example.com/2022/04/23/hello-world/">April 23rd 2022, 4:02:31 pm</a>
+            <p>Link：<a href="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/">http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/</a>
+            <p>Publish date：<a href="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/">May 1st 2022, 10:55:14 pm</a>
+            <p>Update date：<a href="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/">May 1st 2022, 10:11:01 pm</a>
             <p>License：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -514,13 +569,13 @@
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2022/04/23/helloblog/" title="hello blog">
-                    <div class="nextTitle">hello blog</div>
-                </a>
-            
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/04/23/helloblog/" title="hello blog">
+                    <div class="prevTitle">hello blog</div>
+                </a>
             
         </li>
     </ul>
@@ -659,7 +714,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#performSelector-%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E-What-%E5%88%B0-When"><span class="toc-number">1.</span> <span class="toc-text">performSelector 详解——从 What 到 When</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%98%E8%B5%B7"><span class="toc-number">2.</span> <span class="toc-text">缘起</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#performSelector-%E6%98%AF%E6%88%91%E4%BB%AC%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%8C%E8%83%BD%E4%B8%8D%E8%83%BD%E4%BB%8E-runloop-%E7%9A%84%E8%A7%92%E5%BA%A6%E8%AF%B4%E8%AF%B4%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">performSelector 是我们常用的方法，能不能从 runloop 的角度说说？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#performSelector-%E8%B7%9F%E6%88%91%E4%BB%AC%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">2.2.</span> <span class="toc-text">performSelector 跟我们直接调用一个方法有什么区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#performSelector-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">performSelector 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.3.1.</span> <span class="toc-text">使用场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
