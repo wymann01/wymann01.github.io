@@ -2,20 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hexo</title>
+  <title>湖中焉得更有此人</title>
   <meta name="keywords" content="">
-  <meta name="description" content="Hexo">
+  <meta name="description" content="湖中焉得更有此人">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="performSelector 详解——从 What 到 When 缘起  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？  performSelector 的使用  使用场景     参考资料   缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从">
+<meta name="description" content="this is hello blog测试我的第一篇博客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="performSelector 详解——从 What 到 When">
-<meta property="og:url" content="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="performSelector 详解——从 What 到 When 缘起  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？  performSelector 的使用  使用场景     参考资料   缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从">
+<meta property="og:title" content="hello blog">
+<meta property="og:url" content="http://example.com/2022/04/23/helloblog/index.html">
+<meta property="og:site_name" content="湖中焉得更有此人">
+<meta property="og:description" content="this is hello blog测试我的第一篇博客">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-05-01T14:55:14.000Z">
-<meta property="article:modified_time" content="2022-05-01T14:11:01.878Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:published_time" content="2022-04-23T11:55:14.000Z">
+<meta property="article:modified_time" content="2022-04-23T11:57:51.523Z">
+<meta property="article:author" content="淮">
 <meta name="twitter:card" content="summary">
 
 
@@ -64,7 +64,7 @@
          src="/img/avatar.jpg"/>
 </a>
 <div class="author">
-    <span>John Doe</span>
+    <span>淮</span>
 </div>
 
 <div class="icon">
@@ -380,7 +380,7 @@
     </div>
     <div class="article-meta">
         
-            Created At : <time class="date" title='Updated At: 2022-05-22 18:22:28'>2022-05-22 10:04</time>
+            Created At : <time class="date" title='Updated At: 2022-05-23 09:29:16'>2022-05-22 10:04</time>
         
     </div>
     <div class="article-meta">
@@ -421,20 +421,7 @@
         <h1 id="关于Cocoapods你想要了解的一切"><a href="#关于Cocoapods你想要了解的一切" class="headerlink" title="关于Cocoapods你想要了解的一切"></a>关于Cocoapods你想要了解的一切</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
 <li><p><a href="#%E5%89%8D%E8%A8%80">前言</a></p>
 </li>
-<li><p><a href="#cocoapods-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%AE%A1%E7%90%86%E7%AC%AC%E4%B8%89%E6%96%B9%E4%BE%9D%E8%B5%96">CocoaPods 为什么可以管理第三方依赖？</a></p>
-<ul>
-<li><ul>
-<li><p><a href="#1-%E5%88%86%E6%9E%90%E4%BE%9D%E8%B5%96">1. 分析依赖</a></p>
-</li>
-<li><p><a href="#2-%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96">2. 下载依赖</a></p>
-</li>
-<li><p><a href="#3-%E7%94%9F%E6%88%90podsxcodeproj%E6%96%87%E4%BB%B6">3. 生成Pods.xcodeproj文件</a></p>
-</li>
-<li><p><a href="#4-%E7%94%9F%E6%88%90xcworkspace">4. 生成xcworkspace</a></p>
-</li>
-</ul>
-</li>
-</ul>
+<li><p><a href="#cocoapods-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%AE%A1%E7%90%86%E7%AC%AC%E4%B8%89%E6%96%B9%E4%BE%9D%E8%B5%96">CocoaPods 为什么可以管理第三方依赖？</a><br>*   <a href="#1-%E5%88%86%E6%9E%90%E4%BE%9D%E8%B5%96">1. 分析依赖</a><br><br>*   <a href="#2-%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96">2. 下载依赖</a><br><br>*   <a href="#3-%E7%94%9F%E6%88%90podsxcodeproj%E6%96%87%E4%BB%B6">3. 生成Pods.xcodeproj文件</a><br><br>*   <a href="#4-%E7%94%9F%E6%88%90xcworkspace">4. 生成xcworkspace</a></p>
 </li>
 <li><p><a href="#pod-install-%E5%92%8C-pod-update-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88">pod install 和 pod update 的区别是什么？</a></p>
 </li>
@@ -467,8 +454,78 @@
 <h1 id="CocoaPods-为什么可以管理第三方依赖？"><a href="#CocoaPods-为什么可以管理第三方依赖？" class="headerlink" title="CocoaPods 为什么可以管理第三方依赖？"></a>CocoaPods 为什么可以管理第三方依赖？</h1><p>我们拉取了一个项目后，往往要在项目目录下执行pod install ，从而将项目的第三方依赖库<strong>下载</strong>下来并<strong>导入</strong>项目中，pod install后会产生一个 xcworkspace 文件，我们打开这个文件，就能在 Xcode 中打开一个已经把第三方依赖库导入的项目，直接 Run 就可以了。</p>
 <p>所以，CocoaPods 管理第三方依赖的奥秘在于<code>pod install</code></p>
 <p>来看下 <code>pod install</code> 的过程（执行命令<code>pod install --verbose</code>）</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> pod install <span class="literal">--verbose</span></span><br><span class="line"></span><br><span class="line"> <span class="number">1</span>.分析依赖</span><br><span class="line">Analyzing dependencies </span><br><span class="line"></span><br><span class="line">Updating spec repositories</span><br><span class="line">Updating spec repo `master`</span><br><span class="line">  <span class="variable">$</span> /usr/bin/git pull</span><br><span class="line">  Already up<span class="literal">-to-date</span>.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Finding Podfile changes</span><br><span class="line">  - AFNetworking</span><br><span class="line">  - HockeySDK</span><br><span class="line"></span><br><span class="line">Resolving dependencies of `Podfile`</span><br><span class="line">Resolving dependencies <span class="keyword">for</span> target `Pods<span class="string">&#x27; (iOS 6.0)</span></span><br><span class="line"><span class="string">  - AFNetworking (= 1.2.1)</span></span><br><span class="line"><span class="string">  - SDWebImage (= 3.2)</span></span><br><span class="line"><span class="string">    - SDWebImage/Core</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Comparing resolved specification to the sandbox manifest</span></span><br><span class="line"><span class="string">  - AFNetworking</span></span><br><span class="line"><span class="string">  - HockeySDK</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2. 下载依赖</span></span><br><span class="line"><span class="string">Downloading dependencies</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-&gt; Using AFNetworking (1.2.1)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-&gt; Using HockeySDK (3.0.0)</span></span><br><span class="line"><span class="string">  - Running pre install hooks</span></span><br><span class="line"><span class="string">    - HockeySDK</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3. 生成 Pods 项目</span></span><br><span class="line"><span class="string">Generating Pods project</span></span><br><span class="line"><span class="string">  - Creating Pods project</span></span><br><span class="line"><span class="string">  - Adding source files to Pods project</span></span><br><span class="line"><span class="string">  - Adding frameworks to Pods project</span></span><br><span class="line"><span class="string">  - Adding libraries to Pods project</span></span><br><span class="line"><span class="string">  - Adding resources to Pods project</span></span><br><span class="line"><span class="string">  - Linking headers</span></span><br><span class="line"><span class="string">  - Installing libraries</span></span><br><span class="line"><span class="string">    - Installing target `Pods-AFNetworking` iOS 6.0</span></span><br><span class="line"><span class="string">      - Adding Build files</span></span><br><span class="line"><span class="string">      - Adding resource bundles to Pods project</span></span><br><span class="line"><span class="string">      - Generating public xcconfig file at `Pods/Pods-AFNetworking.xcconfig`</span></span><br><span class="line"><span class="string">      - Generating private xcconfig file at `Pods/Pods-AFNetworking-Private.xcconfig`</span></span><br><span class="line"><span class="string">      - Generating prefix header at `Pods/Pods-AFNetworking-prefix.pch`</span></span><br><span class="line"><span class="string">      - Generating dummy source file at `Pods/Pods-AFNetworking-dummy.m`</span></span><br><span class="line"><span class="string">    - Installing target `Pods-HockeySDK` iOS 6.0</span></span><br><span class="line"><span class="string">      - Adding Build files</span></span><br><span class="line"><span class="string">      - Adding resource bundles to Pods project</span></span><br><span class="line"><span class="string">      - Generating public xcconfig file at `Pods/Pods-HockeySDK.xcconfig`</span></span><br><span class="line"><span class="string">      - Generating private xcconfig file at `Pods/Pods-HockeySDK-Private.xcconfig`</span></span><br><span class="line"><span class="string">      - Generating prefix header at `Pods/Pods-HockeySDK-prefix.pch`</span></span><br><span class="line"><span class="string">      - Generating dummy source file at `Pods/Pods-HockeySDK-dummy.m`</span></span><br><span class="line"><span class="string">    - Installing target `Pods` iOS 6.0</span></span><br><span class="line"><span class="string">      - Generating xcconfig file at `Pods/Pods.xcconfig`</span></span><br><span class="line"><span class="string">      - Generating target environment header at `Pods/Pods-environment.h`</span></span><br><span class="line"><span class="string">      - Generating copy resources script at `Pods/Pods-resources.sh`</span></span><br><span class="line"><span class="string">      - Generating acknowledgements at `Pods/Pods-acknowledgements.plist`</span></span><br><span class="line"><span class="string">      - Generating acknowledgements at `Pods/Pods-acknowledgements.markdown`</span></span><br><span class="line"><span class="string">      - Generating dummy source file at `Pods/Pods-dummy.m`</span></span><br><span class="line"><span class="string">  - Running post install hooks</span></span><br><span class="line"><span class="string">  - Writing Xcode project file to `Pods/Pods.xcodeproj`</span></span><br><span class="line"><span class="string">  - Writing Lockfile in `Podfile.lock`</span></span><br><span class="line"><span class="string">  - Writing Manifest in `Pods/Manifest.lock`</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4. 集成到主项目中，生成 xcworkspace 文件</span></span><br><span class="line"><span class="string">Integrating client project</span></span><br></pre></td></tr></table></figure>
+<pre><code class="shell">$ pod install --verbose
 
+ 1.分析依赖
+Analyzing dependencies 
+
+Updating spec repositories
+Updating spec repo `master`
+  $ /usr/bin/git pull
+  Already up-to-date.
+
+
+Finding Podfile changes
+  - AFNetworking
+  - HockeySDK
+
+Resolving dependencies of `Podfile`
+Resolving dependencies for target `Pods&#39; (iOS 6.0)
+  - AFNetworking (= 1.2.1)
+  - SDWebImage (= 3.2)
+    - SDWebImage/Core
+
+Comparing resolved specification to the sandbox manifest
+  - AFNetworking
+  - HockeySDK
+
+2. 下载依赖
+Downloading dependencies
+
+-&gt; Using AFNetworking (1.2.1)
+
+-&gt; Using HockeySDK (3.0.0)
+  - Running pre install hooks
+    - HockeySDK
+
+3. 生成 Pods 项目
+Generating Pods project
+  - Creating Pods project
+  - Adding source files to Pods project
+  - Adding frameworks to Pods project
+  - Adding libraries to Pods project
+  - Adding resources to Pods project
+  - Linking headers
+  - Installing libraries
+    - Installing target `Pods-AFNetworking` iOS 6.0
+      - Adding Build files
+      - Adding resource bundles to Pods project
+      - Generating public xcconfig file at `Pods/Pods-AFNetworking.xcconfig`
+      - Generating private xcconfig file at `Pods/Pods-AFNetworking-Private.xcconfig`
+      - Generating prefix header at `Pods/Pods-AFNetworking-prefix.pch`
+      - Generating dummy source file at `Pods/Pods-AFNetworking-dummy.m`
+    - Installing target `Pods-HockeySDK` iOS 6.0
+      - Adding Build files
+      - Adding resource bundles to Pods project
+      - Generating public xcconfig file at `Pods/Pods-HockeySDK.xcconfig`
+      - Generating private xcconfig file at `Pods/Pods-HockeySDK-Private.xcconfig`
+      - Generating prefix header at `Pods/Pods-HockeySDK-prefix.pch`
+      - Generating dummy source file at `Pods/Pods-HockeySDK-dummy.m`
+    - Installing target `Pods` iOS 6.0
+      - Generating xcconfig file at `Pods/Pods.xcconfig`
+      - Generating target environment header at `Pods/Pods-environment.h`
+      - Generating copy resources script at `Pods/Pods-resources.sh`
+      - Generating acknowledgements at `Pods/Pods-acknowledgements.plist`
+      - Generating acknowledgements at `Pods/Pods-acknowledgements.markdown`
+      - Generating dummy source file at `Pods/Pods-dummy.m`
+  - Running post install hooks
+  - Writing Xcode project file to `Pods/Pods.xcodeproj`
+  - Writing Lockfile in `Podfile.lock`
+  - Writing Manifest in `Pods/Manifest.lock`
+
+4. 集成到主项目中，生成 xcworkspace 文件
+Integrating client project
+</code></pre>
 <h3 id="1-分析依赖"><a href="#1-分析依赖" class="headerlink" title="1. 分析依赖"></a>1. 分析依赖</h3><p>首先读取 Podfile 文件，解析出是否有新增的 pod 需要 install，被删除的 pod 需要 remove。</p>
 <p>然后读取 Podfile.lock文件（如果存在的话），确定上一次 pod install 成功的 pod 版本号。</p>
 <p>最后是解决冲突，根据 <a href="http://semver.org/" title="Semantic Versioning">Semantic Versioning</a> 里定义的原则，确定第三方依赖 pod 的版本号，如果碰到无法解决会报错，开发者需要手动指定 pod 版本号。（中文文档看这里）</p>
@@ -500,11 +557,11 @@
 </blockquote>
 <h1 id="Podfile-中如果写死了pod版本号，是不是就可以抛弃Podfile-lock-了？"><a href="#Podfile-中如果写死了pod版本号，是不是就可以抛弃Podfile-lock-了？" class="headerlink" title="Podfile 中如果写死了pod版本号，是不是就可以抛弃Podfile.lock 了？"></a>Podfile 中如果写死了pod版本号，是不是就可以抛弃Podfile.lock 了？</h1><p><strong>不行</strong>，理由是 「pod 依赖的 pod 」的版本号可能存在不一致。</p>
 <p>假如项目现在依赖了 A 库，Podfile 中这么写：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod <span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;1.0.0&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
+<pre><code class="ruby">pod &#39;A&#39;, &#39;1.0.0&#39;
+</code></pre>
 <p>但是 A 依赖了一个库 B，在 A 的 podspec 文件中是这么定义的：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dependency <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;~&gt; 3.0&#x27;</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="ruby">dependency &#39;B&#39;, &#39;~&gt; 3.0&#39;
+</code></pre>
 <p>那小明跑项目的时候，用的是A（1.0.0）B（3.1.1）。</p>
 <p>但是小花跑项目的时候，就可能是A（1.0.0）B（3.2.9）。</p>
 <p>这时环境就不一致了。</p>
