@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>跨端框架Hummer 是如何渲染的？（iOS 版) | 湖中焉得更有此人</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="跨端框架Hummer 是如何渲染的？（iOS 版) | 湖中焉得更有此人">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="this is hello blog测试我的第一篇博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hello blog">
+<meta property="og:url" content="http://example.com/2022/04/23/helloblog/index.html">
+<meta property="og:site_name" content="湖中焉得更有此人">
+<meta property="og:description" content="this is hello blog测试我的第一篇博客">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-04-23T11:55:14.000Z">
+<meta property="article:modified_time" content="2022-04-23T11:57:51.523Z">
+<meta property="article:author" content="淮">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/avatar/westLake.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/gruvbox-dark.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/avatar/westLake.jpg"/>
+</a>
+<div class="author">
+    <span>淮</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/wymann01"
+               target="_blank">
+                
+                    <i class="iconfont icon-github"></i>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/e8666e7ba998"
+               target="_blank">
+                
+                    <i class="iconfont icon-jianshu"></i>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:wymannpan@foxmail.com"
+               target="_blank">
+                
+                    <i class="iconfont icon-email"></i>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=1103584503&site=qq&menu=yes"
+               target="_blank">
+                
+                    <i class="iconfont icon-qq"></i>
+                
+            </a>
+        
+    
+</div>
+
+
+
+    <a class="more-menus">更多菜单</a>
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(5)</small>
+            
+        </div>
+    </li>
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+                <a class="dynamic-menu site_url"
+                   
+                   href="/photo">相册</a>
+        
+            
+                <a class="dynamic-menu "
+                   target="_self"
+                   
+                   href="http://yelog.org/">叶落阁</a>
+        
+            
+                <a class="dynamic-menu "
+                   target="_blank"
+                        
+                   href="https://github.com/yelog">github</a>
+        
+    </div>
+    <div>
+        
+            <a class="about  site_url"
+               
+               href="/about">About</a>
+        
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="5">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="All "
+           href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="跨端框架Hummer 是如何渲染的？（iOS 版)">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
+            <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/05/22/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2022-05-22 10:04:32">2022/05/22</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="performSelector 详解——从 What 到 When">performSelector 详解——从 What 到 When</span>
+            <span class="post-date" title="2022-05-01 22:55:14">2022/05/01</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/04/23/helloblog/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="hello blog">hello blog</span>
+            <span class="post-date" title="2022-04-23 19:55:14">2022/04/23</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/04/23/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2022-04-23 16:02:31">2022/04/23</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-跨端框架Hummer 是如何渲染的？（iOS 版）" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">跨端框架Hummer 是如何渲染的？（iOS 版)</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2022-07-25 16:56:23'>2022-07-25 16:56</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer-%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS-%E7%89%88%EF%BC%89"><span class="toc-text">跨端框架Hummer 是如何渲染的？（iOS 版）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9E%E4%BE%8B%E5%8C%96%EF%BC%9A%E3%80%8C%E7%89%B9%E5%88%AB%E9%B8%A3%E8%B0%A2%E4%BD%A0%E5%88%B6%E9%80%A0%E6%9B%B4%E6%AC%A2%E4%B9%90%E7%9A%84%E6%88%91%E3%80%8D"><span class="toc-text">1 实例化：「特别鸣谢你制造更欢乐的我」</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E8%AE%BE%E7%BD%AE-style%EF%BC%9A"><span class="toc-text">2.1设置 style：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%AE%BE%E7%BD%AE-Property-%EF%BC%88%E6%AF%94%E5%A6%82-Text-%E7%9A%84-text-%E5%B1%9E%E6%80%A7%EF%BC%89"><span class="toc-text">2.2 设置 Property （比如 Text 的 text 属性）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-render%E6%B8%B2%E6%9F%93"><span class="toc-text">3 render渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-markDirty%EF%BC%9A"><span class="toc-text">4 markDirty：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-layout-%E5%B8%83%E5%B1%80"><span class="toc-text">5 layout 布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E6%B5%8B%E4%B9%A0%E9%A2%98"><span class="toc-text">自测习题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-6 i,
+    .toc-level-6 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="跨端框架Hummer-是如何渲染的？（iOS-版）"><a href="#跨端框架Hummer-是如何渲染的？（iOS-版）" class="headerlink" title="跨端框架Hummer 是如何渲染的？（iOS 版）"></a>跨端框架Hummer 是如何渲染的？（iOS 版）</h1><p><a href="https://hummer.didi.cn/doc#/zh-CN/" title="Hummer"><strong>Hummer</strong></a>是目前滴滴货运司机端正在使用的跨端框架，之前在开发需求的时候碰到了诡异的布局问题，由于自己是刚接触，完全不知道从哪里下手排查问题，于是请来了兄弟部门 Hummer iOS 现在的维护者史广远，看着他一步一步地打断点，打日志，最终成功定位问题，给出了解决方案。心里敬佩得很。</p>
+<p>所以既为了以后开发能够有独立排查问题的能力，也为了提高自己对于跨端技术的理解，这就来整理了下Hummer 的渲染机制，我看以后还有什么问题能难倒我？</p>
+<p><img src="/image/image_APZMBxd5cB.png"></p>
+<hr>
+<p>从我们的题目开始：<strong>Hummer在 iOS 侧是如何渲染的？</strong></p>
+<p>如同把大象塞进冰箱，我分为 5 步：</p>
+<ol>
+<li>创建：把组件实例化，创建出来</li>
+<li>设置：设置它的 style 和属性</li>
+<li>渲染：把准备好的组件添加到 yoga 节点树上，也是添加到屏幕上</li>
+<li>标记：标记需要重新计算、刷新的组件</li>
+<li>布局：调用 yoga 对组件进行布局</li>
+</ol>
+<hr>
+<blockquote>
+<p>Hummer 既可以用 TypeScript 写，也可以用Tenon 写，本文采用第一种写法。</p>
+</blockquote>
+<p>首先来看用<strong>TypeScript</strong> 写的业务代码：</p>
+<pre><code class="typescript">import &#123;Hummer,View, Text&#125; from &#39;@hummer/hummer-front&#39;
+class RootView extends View &#123;
+  constructor() &#123;
+    super();
+    this.style = &#123;
+      width: &#39;100%&#39;,
+      height: &#39;100%&#39;,
+      alignItems: &#39;flex-start&#39;,
+      justifyContent: &#39;center&#39;
+    &#125;
+    // 创建了一个 Text 组件
+    var text = new Text()
+    text.style = &#123;
+      fontSize: 20
+    &#125;
+    text.text = &#39;~ Hello Hummer ~&#39;
+    this.appendChild(text);
+  &#125;
+&#125;
+
+// 根页面渲染
+Hummer.render(new RootView());
+</code></pre>
+<p>简单，天真，几乎只写了一个 <strong>Text</strong> 组件。</p>
+<h3 id="1-实例化：「特别鸣谢你制造更欢乐的我」"><a href="#1-实例化：「特别鸣谢你制造更欢乐的我」" class="headerlink" title="1 实例化：「特别鸣谢你制造更欢乐的我」"></a>1 实例化：「特别鸣谢你制造更欢乐的我」</h3><p>在执行 var text &#x3D; new Text() 时，在 Native 侧就得<strong>创建一个 HMLabel实例，并且要把实例装入一个 JS 对象中返回给 JS</strong>，它还得持有一下。这一步交给谁来做 ——<strong>hummerCreate</strong>: 函数。</p>
+<blockquote>
+<p>1 调用 HumemrBase 的 constructor 方法<br>2 根据 name 属性获取 className &amp; check cache<br>3调用 globalThis 的 hummerCreate 方法生成 native 对应的视图实例 &amp; 被 this._ptivate 持有<br>——《跨端框架 Hummer 通信机制 - iOS 版》</p>
+</blockquote>
+<pre><code class="objective-c">JSValueRef _Nullable hummerCreate(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef _Nonnull arguments[], JSValueRef *exception) &#123;
+    HMAssertMainQueue(); 
+    if (argumentCount &lt; 2) &#123;
+        HMLogError(HUMMER_CREATE_ERROR);
+
+        return NULL;
+    &#125;
+    HMJSCExecutor *executor = (HMJSCExecutor *) [HMExecutorMap objectForKey:[NSValue valueWithPointer:JSContextGetGlobalContext(ctx)]];
+    NSString *className = [executor convertValueRefToString:arguments[0] isForce:NO];
+    if (className.length == 0) &#123;
+        HMLogError(HUMMER_CREATE_ERROR);
+        return NULL;
+    &#125;
+    // 获取导出类
+    HMExportClass *exportClass = HMExportManager.sharedInstance.jsClasses[className];
+    NSString *objcClassName = exportClass.className;
+    if (objcClassName.length == 0) &#123;
+        HMLogError(HUMMER_CREATE_CLASS_NOT_FOUND, className);
+
+        return NULL;
+    &#125;
+    // className 是 Hummer 侧的类名（比如 Text）
+    // objcClassName 是 Native 侧的类名（比如 HMLabel）
+    Class clazz = NSClassFromString(objcClassName);
+    if (!clazz) &#123;
+        HMLogError(HUMMER_CREATE_CLASS_NOT_FOUND, className);
+        return NULL;
+    &#125;
+
+    // jscall回调
+    HMJSContext *context = [[HMJSGlobal globalObject] currentContext:executor];
+    
+    // 创建不透明指针
+    NSObject *opaquePointer = NULL;
+    NSMutableArray&lt;HMBaseValue *&gt; *argumentArray = nil;
+    for (int i = 2; i &lt; argumentCount; ++i) &#123;
+        HMBaseValue *value = [[HMJSCStrongValue alloc] initWithValueRef:arguments[i] executor:executor];
+        if (!argumentArray) &#123;
+            argumentArray = [NSMutableArray arrayWithCapacity:argumentCount - 2];
+        &#125;
+        if (value) &#123;
+            [argumentArray addObject:value];
+        &#125;
+    &#125;
+#ifdef HMDEBUG
+    [HMJSCallerInterceptor callNativeWithClassName:className functionName:@&quot;constructor&quot; objectRef:nil args:argumentArray context:context];
+#endif
+    HMCurrentExecutor = executor;
+    // 支持 HMJSObject，如果不支持则回退 init
+    // 不判断 argumentCount &gt; 2，因为 UIView 必须调用 HMJSObject 初始化方法
+    if ([clazz conformsToProtocol:@protocol(HMJSObject)]) &#123;
+        opaquePointer = (id) [(id) [clazz alloc] initWithHMValues:argumentArray];
+    &#125; else &#123;
+        HMOtherArguments = argumentArray.copy;
+        opaquePointer = [[clazz alloc] init];
+    &#125;
+    HMCurrentExecutor = nil;
+    HMOtherArguments = nil;
+    if (!opaquePointer) &#123;
+        HMLogError(HUMMER_CAN_NOT_CREATE_NATIVE_OBJECT, className);
+        return NULL;
+    &#125;
+    // 关联 hm_value
+    opaquePointer.hmValue = [[HMJSCStrongValue alloc] initWithValueRef:arguments[1] executor:executor];
+    // 引用计数 +1
+    HMLogDebug(HUMMER_CREATE_TEMPLATE, className);
+    JSClassDefinition hostObjectClassDef = kJSClassDefinitionEmpty;
+    hostObjectClassDef.version = 0;
+    hostObjectClassDef.attributes = kJSClassAttributeNoAutomaticPrototype;
+    hostObjectClassDef.finalize = hummerFinalize;
+    JSClassRef hostObjectClass = JSClassCreate(&amp;hostObjectClassDef);
+
+    // 填充不透明指针
+    JSObjectRef objectRef = JSObjectMake(ctx, hostObjectClass, (__bridge void *) opaquePointer);
+    if (objectRef) &#123;
+        CFRetain((__bridge CFTypeRef) opaquePointer);
+    &#125;
+    JSClassRelease(hostObjectClass);
+
+    return objectRef;
+&#125;
+</code></pre>
+<p>这个函数做了：</p>
+<ol>
+<li>根据 Hummer 侧传过来的消息获取到了在 Native 侧注册的类</li>
+<li>创建这个类</li>
+<li>创建不透明指针，把这个类填到不透明指针当中</li>
+<li>返回不透明指针</li>
+</ol>
+<p><strong>再次强调</strong>：最终返回的是<strong>JSObjectRef</strong> 对象，不是简单的 <strong>HMLabel</strong> 对象。</p>
+<p>我猜测这样做的原因是 Native需要跟 JavaScriptCore 进行通信，只创建一个 HMLabel 你怎么跟 Hummer 侧进行交流，后续 Hummer 怎么拿到这个对象进行设置？</p>
+<h3 id="2-1设置-style："><a href="#2-1设置-style：" class="headerlink" title="2.1设置 style："></a>2.1设置 style：</h3><p>HMLabel 创建出来后，就需要设置它的样式，比如 height、width等。Hummer 侧会一个发 setStyle 的信号，Native会调用hm_setStyle: 方法</p>
+<blockquote>
+<p>这层转化是通过 HM_EXPORT_PROPERTY 这个宏实现的</p>
+</blockquote>
+<pre><code class="objective-c">- (void)hm_setStyle:(HMBaseValue *)style &#123;
+    // 转化交给 HMJSCExecutor 完成
+    id styleObject = style.toDictionary;
+    NSDictionary *styleDic = nil;
+    if ([styleObject isKindOfClass:NSDictionary.class]) &#123;
+        styleDic = styleObject;
+    &#125;
+    if (styleDic.count == 0) &#123;
+        HMLogError(@&quot;style 必须有键值对&quot;);
+        return;
+    &#125;
+    // 把 style 信息划分成三个部分：布局、属性（样式）、过渡信息（动画相关）
+    NSMutableDictionary&lt;NSString *, NSObject *&gt; *layoutInfo = NSMutableDictionary.dictionary;
+    NSMutableDictionary&lt;NSString *, NSObject *&gt; *attributes = NSMutableDictionary.dictionary;
+    NSMutableDictionary&lt;NSString *, NSObject *&gt; *transitions = NSMutableDictionary.dictionary;
+    [styleDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) &#123;
+        if (![key isKindOfClass:NSString.class]) &#123;
+            return;
+        &#125;
+        
+        // 比如 left，flexDirection
+        if ([[self hm_layoutInfoKeys] containsObject:key]) &#123;
+            layoutInfo[key] = obj;
+        &#125; else if ([[self hm_transtionInfoKeys] containsObject:key]) &#123;
+        // 比如 transitionDelay，
+            transitions[key] = obj;
+        &#125; else &#123;
+        // 比如 backgroundColor
+            attributes[key] = obj;
+        &#125;
+        // 布局、属性和过渡信息可以看文档，看看有什么
+        // https://hummer.didi.cn/doc#/zh-CN/normal_view_style
+    &#125;];
+
+    NSMutableDictionary&lt;NSString *, NSObject *&gt; *mutableStyleDictionary = self.hm_styleStore.mutableCopy;
+    if (!mutableStyleDictionary) &#123;
+        mutableStyleDictionary = [NSMutableDictionary dictionaryWithCapacity:layoutInfo.count + attributes.count + transitions.count];
+    &#125;
+    // 把分好的三部分又装了回去，让 self.hm_styleStore 持有
+    self.hm_styleStore = nil;
+    [mutableStyleDictionary addEntriesFromDictionary:layoutInfo];
+    [mutableStyleDictionary addEntriesFromDictionary:attributes];
+    [mutableStyleDictionary addEntriesFromDictionary:transitions];
+    self.hm_styleStore = mutableStyleDictionary;
+
+    ...
+    [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSObject *obj, BOOL *stop) &#123;
+        // 过滤需要动画的属性，通过动画展示
+        if (self.hm_transitionAnimation &amp;&amp; [self.hm_transitionAnimation.needAnimations.allKeys containsObject:key]) &#123;
+            [transitionAnimations addEntriesFromDictionary:@&#123;key: obj&#125;];
+        &#125; else &#123;
+            // layoutInfo、attributes 就通过这个设置
+            [self hm_configureWithTarget:self cssAttribute:key value:obj converterManager:HMAttrManager.sharedManager];
+        &#125;
+    &#125;];
+    
+    ...
+    // 标记：该结点需要重新计算位置
+    [self hm_markDirty];
+&#125;
+</code></pre>
+<p>用我易（粗）懂（暴）的语言说就是：</p>
+<ol>
+<li>HMJSCExecutor 把 Hummer 侧的 style 字典转成NSDictionary</li>
+<li>把NSDictionary里的元素划分成三种不同的 style：布局、属性、过渡相关的</li>
+<li>设置给hm_styleStore持有</li>
+<li>通过hm_configureWithTarget: cssAttribute: value:converterManager: 函数实际去设置对应的 style 值</li>
+</ol>
+<h3 id="2-2-设置-Property-（比如-Text-的-text-属性）"><a href="#2-2-设置-Property-（比如-Text-的-text-属性）" class="headerlink" title="2.2 设置 Property （比如 Text 的 text 属性）"></a>2.2 设置 Property （比如 Text 的 text 属性）</h3><pre><code class="objective-c">// 不管是 get 还是 set 都是调用这个方法
+- (JSValueRef)hummerGetSetPropertyWithArgumentCount:(size_t)argumentCount arguments:(const JSValueRef _Nonnull[])arguments isSetter:(BOOL)isSetter &#123;
+    ...
+    // 这里为什么要把 argument[0] 转成 JSObjectRef？
+    JSObjectRef objectRef = NULL;
+    if (JSValueIsObject(self.contextRef, arguments[0])) &#123;
+        JSValueRef exception = NULL;
+        objectRef = JSValueToObject(self.contextRef, arguments[0], &amp;exception);
+        [self popExceptionWithErrorObject:&amp;exception];
+    &#125;
+    ...
+
+    // 获取对应的类名
+    NSString *className = [self convertValueRefToString:arguments[objectRef ? 1 : 0] isForce:NO];
+    if (className.length == 0) &#123;
+        return NULL;
+    &#125;
+    NSString *propertyName = [self convertValueRefToString:arguments[objectRef ? 2 : 1] isForce:NO];
+    if (propertyName.length == 0) &#123;
+        return NULL;
+    &#125;
+
+    id target = nil;
+    SEL selector = nil;
+    NSMethodSignature *methodSignature = nil;
+
+    [self hummerExtractExportWithFunctionPropertyName:propertyName objectRef:objectRef target:&amp;target selector:&amp;selector methodSignature:&amp;methodSignature isSetter:isSetter jsClassName:className];
+    // 通过导出类、导出方法，获取到了 Native 类、对应的方法
+
+    ...
+    // 转发消息，调用原生方法
+    return [self hummerCallNativeWithArgumentCount:argumentCount arguments:arguments target:target selector:selector methodSignature:methodSignature];
+&#125;
+
+- (JSValueRef)hummerCallNativeWithArgumentCount:(size_t)argumentCount arguments:(JSValueRef const[])arguments target:(id)target selector:(SEL)selector methodSignature:(NSMethodSignature *)methodSignature &#123;
+    ...
+    BOOL isClass = object_isClass(target);
+    NSMutableArray&lt;HMBaseValue *&gt; *otherArguments = nil;
+    HMCurrentExecutor = self;
+    // 隐含着 numerOfArguments + 0/1 &lt;= argumentCount
+    for (NSUInteger i = methodSignature.numberOfArguments + (isClass ? 0 : 1); i &lt; argumentCount; ++i) &#123;
+        // 多余的转数组
+        HMBaseValue *hummerValue = [[HMJSCStrongValue alloc] initWithValueRef:arguments[i] executor:HMCurrentExecutor];
+        if (!otherArguments) &#123;
+            otherArguments = [NSMutableArray arrayWithCapacity:argumentCount - methodSignature.numberOfArguments];
+        &#125;
+        if (hummerValue) &#123;
+            [otherArguments addObject:hummerValue];
+        &#125;
+    &#125;
+    // 存储额外参数
+    HMOtherArguments = otherArguments.copy;
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+    invocation.target = target;
+    invocation.selector = selector;
+    // 后续做循环，都是临时变量，如果不做 retain，会导致野指针
+    [invocation retainArguments];
+
+    // 参数
+    // 本质为 MIN(methodSignature.numberOfArguments, argumentCount - (isClass : 0 : 1))，主要为了防止无符号数字溢出
+    for (NSUInteger i = 2; i &lt; MIN(methodSignature.numberOfArguments + (isClass ? 0 : 1), argumentCount) - (isClass ? 0 : 1); ++i) &#123;
+        const char *objCType = [methodSignature getArgumentTypeAtIndex:i];
+        HMEncodingType type = HMEncodingGetType(objCType);
+        id param = nil;
+        if (type == HMEncodingTypeBlock) &#123;
+            // Block
+            param = [(HMJSCExecutor *) HMCurrentExecutor convertValueRefToFunction:arguments[i + (isClass ? 0 : 1)]];
+        &#125; else if (type == HMEncodingTypeObject) &#123;
+            // HMJSCValue
+            param = [[HMJSCStrongValue alloc] initWithValueRef:arguments[i + (isClass ? 0 : 1)] executor:HMCurrentExecutor];
+        &#125; else if (HMEncodingTypeIsCNumber(type)) &#123;
+            // js 只存在 double 和 bool 类型，但原生需要区分具体类型。
+            param = [(HMJSCExecutor *) HMCurrentExecutor convertValueRefToNumber:arguments[i + (isClass ? 0 : 1)] isForce:NO];
+        &#125; else &#123;
+            HMLogError(HUMMER_UN_SUPPORT_TYPE_TEMPLATE, objCType);
+        &#125;
+        [invocation hm_setArgument:param atIndex:i encodingType:type];
+    &#125;
+    // 拼装完毕，执行方法
+    [invocation invoke];
+    HMOtherArguments = nil;
+    // 返回值
+    JSValueRef returnValueRef = NULL;
+    const char *objCReturnType = methodSignature.methodReturnType;
+    HMEncodingType returnType = HMEncodingGetType(objCReturnType);
+    if (returnType != HMEncodingTypeVoid &amp;&amp; returnType != HMEncodingTypeUnknown) &#123;
+        id returnObject = [invocation hm_getReturnValueObject];
+        if (returnObject) &#123;
+            returnValueRef = [(HMJSCExecutor *) HMCurrentExecutor convertObjectToValueRef:returnObject];
+        &#125;
+    &#125;
+    HMCurrentExecutor = nil;
+
+    return returnValueRef;
+&#125;
+</code></pre>
+<p>继续粗暴描述：</p>
+<ol>
+<li>获取到 Native 侧已经注册的类名，获取到 getter 和 setter</li>
+<li>拼装NSInvocation，处理参数，然后调用 invoke 方法执行Native 的 getter 和 setter</li>
+<li>执行完成后，获取返回值</li>
+<li>最后把JSValueRef返回给JSC(我理解就是 Hummer 侧)</li>
+</ol>
+<h3 id="3-render渲染"><a href="#3-render渲染" class="headerlink" title="3 render渲染"></a>3 render渲染</h3><p>该创建的创了，该设置的设了，然后得把它们渲染到屏幕上</p>
+<pre><code class="objective-c">- (void)render:(HMBaseValue *)page &#123;
+    id&lt;HMBaseExecutorProtocol&gt; executor = page.context;
+    HMJSContext *context = [HMJSGlobal.globalObject currentContext:executor ? executor : HMCurrentExecutor];
+    context.didCallRender = YES;
+    // 里面还是用 HMJSCExecutor 将 HMBaseValue 转成具体的类，比如 UIView
+    NSObject *viewObject = page.toNativeObject;
+    if (!viewObject || ![viewObject isKindOfClass:UIView.class]) &#123;
+        return;
+    &#125;
+    UIView *view = (UIView *) viewObject;
+    [context didRenderPage:page nativeView:view];
+&#125;
+
+- (void)didRenderPage:(HMBaseValue *)page nativeView:(nonnull UIView *)view&#123;
+    
+    self.componentView = page;
+    // 把这个 View 添加到屏幕上(会调用 Yoga 把节点插入到节点树上)
+    [self.rootView addSubview:view];
+    self.rootView.isHmLayoutEnabled = YES;
+    [self.rootView hm_markDirty];
+    if ([self.delegate respondsToSelector:@selector(context:didRenderPage:)]) &#123;
+        [self.delegate context:self didRenderPage:page];
+    &#125;
+    if (self.renderCompletion) &#123;
+        self.renderCompletion();
+    &#125;
+    // 排序当前视图
+    [UIView hm_reSortFixedView:self];
+    ...
+&#125;
+</code></pre>
+<p>复杂地概括下：</p>
+<ol>
+<li>将 page 转成 Native 的 UIView 对象</li>
+<li>渲染 UIView</li>
+<li>把这个 UIView 添加到 rootView 上，插入到 Yoga节点树</li>
+</ol>
+<h3 id="4-markDirty："><a href="#4-markDirty：" class="headerlink" title="4 markDirty："></a>4 markDirty：</h3><pre><code class="objective-c">- (void)hm_markDirty &#123;
+    if (!self.isHmLayoutEnabled) &#123;
+        return;
+    &#125;
+
+    // 1. 叶节点 -&gt; 叶节点（脏），需要 markDirty + setNeedsLayout
+    // 2. 容器节点 -&gt; 容器节点（脏），只需要 setNeedsLayout
+    // 3. 叶节点 -&gt; 容器节点（脏），只需要 setNeedsLayout
+    // 4. 容器节点 -&gt; 叶节点（脏），只需要 setNeedsLayout
+    // YGAttachNodesFromViewHierachy 会针对 2 3 4 情况自行做出标记脏节点的动作
+    if (self.hm_renderObject.numberOfChildren == 0 &amp;&amp; self.hm_renderObject.isLeaf) &#123;
+        // 原先是叶节点，现在也是叶节点
+        [self.hm_renderObject markDirty];
+    &#125;
+    NSAssert(NSThread.isMainThread, @&quot;必须是主线程&quot;);
+    if (!viewSet) &#123;
+        viewSet = NSHashTable.weakObjectsHashTable;
+        dispatch_async(dispatch_get_main_queue(), ^&#123;
+            // 布局对应的 View（最终是通过 frame 的方式进行布局的）
+            [UIView hm_layoutIfNeeded];
+        &#125;);
+    &#125;
+    [viewSet addObject:self];
+&#125;
+</code></pre>
+<h3 id="5-layout-布局"><a href="#5-layout-布局" class="headerlink" title="5 layout 布局"></a>5 layout 布局</h3><pre><code class="objective-c">+ (void)hm_layoutIfNeeded &#123;
+    if (viewSet.count == 0) &#123;
+        return;
+    &#125;
+    NSHashTable&lt;__kindof UIView *&gt; *rootViewSet = nil;
+    // viewSet 是静态变量，我猜测
+    NSEnumerator&lt;__kindof UIView *&gt; *enumerator = viewSet.objectEnumerator;
+    UIView *value = nil;
+    // 找到 yoga 节点树的 rootView
+    while ((value = enumerator.nextObject)) &#123;
+        UIView *rootView = hm_yoga_get_root_view(value);
+        if (!rootViewSet) &#123;
+            rootViewSet = NSHashTable.weakObjectsHashTable;
+        &#125;
+        [rootViewSet addObject:rootView];
+    &#125;
+    viewSet = nil;
+    enumerator = rootViewSet.objectEnumerator;
+    // 调用 yoga 进行布局
+    while ((value = enumerator.nextObject)) &#123;
+        [value hm_layoutYogaRootView];
+    &#125;
+&#125;
+
+// 最终会调用这个函数：
+// preserveOriginpreserveOrigin 为 YES，表示布局的时候继承上一次的 frame
+- (void)applyLayoutPreservingOrigin:(BOOL)preserveOriginpreserveOrigin dimensionFlexibility:(HummerDimensionFlexibility)dimensionFlexibility view:(UIView *)view affectedShadowViews:(NSHashTable&lt;HMRenderObject *&gt; *)affectedShadowViews &#123;
+    // 把 View 插入到 yoga 节点树中
+    [self attachRenderObjectFromViewHierarchyForRootView:view];
+
+    if (!affectedShadowViews) &#123;
+        affectedShadowViews = [NSHashTable weakObjectsHashTable];
+    &#125;
+    HMRenderObject *renderObject = (HMRenderObject *) view.hm_renderObject;
+    HMRootRenderObject *rootRenderObject = [[HMRootRenderObject alloc] init];
+    rootRenderObject.renderObject = renderObject;
+    
+    // 最小大小直接忽略
+    CGSize oldMinimumSize = CGSizeMake(HMCoreGraphicsFloatFromYogaValue(YOGA_TYPE_WRAPPER(YGNodeStyleGetMinWidth)(renderObject.yogaNode), 0), HMCoreGraphicsFloatFromYogaValue(YOGA_TYPE_WRAPPER(YGNodeStyleGetMinHeight)(renderObject.yogaNode), 0));
+    if (!CGSizeEqualToSize(oldMinimumSize, rootRenderObject.minimumSize)) &#123;
+        rootRenderObject.minimumSize = oldMinimumSize;
+    &#125;
+    // 默认直接使用 rootView 大小
+    rootRenderObject.availableSize = view.bounds.size;
+    if (dimensionFlexibility &amp; HummerDimensionFlexibilityWidth) &#123;
+        CGSize availableSize = rootRenderObject.availableSize;
+        availableSize.width = CGFLOAT_MAX;
+        rootRenderObject.availableSize = availableSize;
+    &#125;
+    if (dimensionFlexibility &amp; HummerDimensionFlexibilityWidth) &#123;
+        CGSize availableSize = rootRenderObject.availableSize;
+        availableSize.height = CGFLOAT_MAX;
+        rootRenderObject.availableSize = availableSize;
+    &#125;
+    // 调用 yoga 进行布局
+    [rootRenderObject layoutWithAffectedShadowViews:affectedShadowViews];
+
+    if (affectedShadowViews.count &lt;= 0) &#123;
+        // no frame change results in no UI update block
+        return;
+    &#125;
+    for (HMRenderObject *shadowView in affectedShadowViews) &#123;
+        HMLayoutMetrics layoutMetrics = shadowView.layoutMetrics;
+        UIView *inlineView = shadowView.view;
+        hm_safe_main_thread(^&#123;
+            inlineView.hm_animationPropertyBounds = inlineView.bounds;
+            inlineView.hm_animationPropertyCenter = inlineView.center;
+            CGRect frame = layoutMetrics.frame;
+            // 只有在 HMDisplayTypeNone 或 visibility: hidden 情况下，隐藏视图
+            BOOL isHidden = layoutMetrics.displayType == HMDisplayTypeNone || inlineView.hm_visibility == YES;
+            if (inlineView.isHidden != isHidden) &#123;
+                inlineView.hidden = isHidden;
+            &#125;
+            if (view == inlineView) &#123;
+                // 需要继承上次的 origin
+                if (preserveOrigin) &#123;
+                    frame = (CGRect) &#123;
+                            .origin = &#123;
+                                    .x = (CGRectGetMinX(frame) + inlineView.frame.origin.x),
+                                    .y = (CGRectGetMinY(frame) + inlineView.frame.origin.y),
+                            &#125;,
+                            .size = frame.size
+                    &#125;;
+                &#125;
+            &#125;
+            // 为 shadowView 设置 frame
+            [inlineView hummerSetFrame:frame];
+        &#125;);
+    &#125;
+&#125;
+</code></pre>
+<blockquote>
+<p>shadowView 是什么？——辅助类，负责在 shadow 线程进行布局相关的计算</p>
+</blockquote>
+<p>至此，我们的 Text 组件就添加到了屏幕上，并最终显示了出来</p>
+<p><img src="/image/image_GR5FJw9Zmq.png"></p>
+<p><img src="/image/image_BDt3lrxuia.png"></p>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Hummer 的渲染机制跟 ReactNative 的比较像：</p>
+<p><img src="/image/Hummer%E6%B8%B2%E6%9F%93_6CexzvtQEf.png"></p>
+<p>不过还是有很多问题浮现了出来：</p>
+<ol>
+<li>如果组件发生了改变，Hummer 是如何刷新视图树的呢？</li>
+<li>hummerCreate 函数是怎么一步步从 Hummer 侧调用的呢？还有 render:？</li>
+<li>Native 和 JS 是如何通信的？</li>
+<li>Hummer 的启动流程都做了些什么？</li>
+</ol>
+<p>这些问题我会在后续的文章中逐渐进行解答。</p>
+<h3 id="自测习题"><a href="#自测习题" class="headerlink" title="自测习题"></a>自测习题</h3><p>根据《认知天性》，考试是最有效的学习策略之一，你能解答下面的问题吗：</p>
+<p><strong>为什么以下写法不能生效？</strong></p>
+<pre><code class="typescript">text.style.color = &#39;#ffffff&#39;
+</code></pre>
+<p><img src="/image/image_o7Bw64ThP5.png"></p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>请诸君思考，思考</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>解答：<strong>那种写法会调用 getter 而不是 setter，也就是hm_style: 方法，而不是hm_setStyle: 方法。当然不会生效。</strong></p>
+<hr>
+<p><strong>为什么这行代码放在一开始就会导致render 不执行？</strong></p>
+<pre><code class="objective-c">appendText(message:string)&#123;
+    var text = new Text()
+
+    // 放在这里, 练render 函数都不会调用了，为啥？
+    text.style.color = &#39;#666666&#39;
+
+    text.style = &#123;
+      fontSize: 20,
+    &#125;
+
+    text.style = &#123;
+      color: &#39;#999999&#39;
+    &#125;
+
+    // 放在这里，不生效，因为这行代码翻译过去是调用了 getter 而不是 setter
+    text.style.color = &#39;#666666&#39;
+
+    text.text = message
+    this.appendChild(text);
+  &#125;
+</code></pre>
+<p>暂时没答案，我猜是因为调用 getter 后得到的返回值类型不对，导致后面的代码不执行了？</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
+<li>跨端框架 Hummer 通信机制 - iOS 版（滴滴内部资料）</li>
+<li><a href="https://juejin.cn/post/6844904003692658701#heading-9" title="ReactNative 源码解析 —— 渲染机制详解">ReactNative 源码解析 —— 渲染机制详解</a></li>
+<li><a href="https://juejin.cn/post/6844904184542822408#heading-14" title="「ReactNative 原理」 Native 层的渲染流程">「ReactNative 原理」 Native 层的渲染流程</a></li>
+<li><a href="https://www.jianshu.com/p/7e7b462c187b" title="详解 React Native 渲染原理">详解 React Native 渲染原理</a></li>
+<li><a href="https://hummer.didi.cn/home#/" title="Hummer">Hummer</a></li>
+</ul>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 wymannpan@foxmail.com </span>
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2021-2022  淮
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://img1.artron.net/auction/2020/art517681/d/art5176810663.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+<div class="mobile-menus-out" >
+
+</div>
+<div class="mobile-menus">
+    
+    
+    <a class="dynamic-menu site_url"   href="/photo">相册</a>
+    
+    
+    <a class="dynamic-menu " target="_self"   href="http://yelog.org/">叶落阁</a>
+    
+    
+    <a class="dynamic-menu " target="_blank"  href="https://github.com/yelog">github</a>
+    
+</div>
+
+
+</html>
