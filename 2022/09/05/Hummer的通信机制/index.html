@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>湖中焉得更有此人</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="湖中焉得更有此人">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Hummer的通信机制—— 一个跨端框架应该要怎么通信？ 世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫星河。 还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="湖中焉得更有此人">
+<meta property="og:url" content="http://example.com/2022/09/05/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="湖中焉得更有此人">
+<meta property="og:description" content="Hummer的通信机制—— 一个跨端框架应该要怎么通信？ 世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫星河。 还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactN">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image/image_bVcTLCP6tv.png">
+<meta property="og:image" content="http://example.com/image/image_q210gVqEgd.png">
+<meta property="og:image" content="http://example.com/image/image_eDrwX0JXxU.png">
+<meta property="og:image" content="http://example.com/image/image_hTt0-neHh7.png">
+<meta property="article:published_time" content="2022-09-05T07:35:16.000Z">
+<meta property="article:modified_time" content="2022-09-05T15:39:00.341Z">
+<meta property="article:author" content="淮">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/image_bVcTLCP6tv.png">
+
+
+<link rel="icon" href="/avatar/westLake.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/gruvbox-dark.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/avatar/westLake.jpg"/>
+</a>
+<div class="author">
+    <span>淮</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/wymann01"
+               target="_blank">
+                
+                    <i class="iconfont icon-github"></i>
+                
+            </a>
+        
+    
+        
+            <a title="jianshu"
+               href="https://www.jianshu.com/u/e8666e7ba998"
+               target="_blank">
+                
+                    <i class="iconfont icon-jianshu"></i>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:wymannpan@foxmail.com"
+               target="_blank">
+                
+                    <i class="iconfont icon-email"></i>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=1103584503&site=qq&menu=yes"
+               target="_blank">
+                
+                    <i class="iconfont icon-qq"></i>
+                
+            </a>
+        
+    
+</div>
+
+
+
+    <a class="more-menus">更多菜单</a>
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(6)</small>
+            
+        </div>
+    </li>
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+                <a class="dynamic-menu site_url"
+                   
+                   href="/photo">相册</a>
+        
+            
+                <a class="dynamic-menu "
+                   target="_self"
+                   
+                   href="http://yelog.org/">叶落阁</a>
+        
+            
+                <a class="dynamic-menu "
+                   target="_blank"
+                        
+                   href="https://github.com/yelog">github</a>
+        
+    </div>
+    <div>
+        
+            <a class="about  site_url"
+               
+               href="/about">About</a>
+        
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="6">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="All "
+           href="/2022/09/05/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2022-09-05 15:35:16">2022/09/05</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="跨端框架Hummer 是如何渲染的？（iOS 版)">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
+            <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/05/22/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title=""></span>
+            <span class="post-date" title="2022-05-22 10:04:32">2022/05/22</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="performSelector 详解——从 What 到 When">performSelector 详解——从 What 到 When</span>
+            <span class="post-date" title="2022-05-01 22:55:14">2022/05/01</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/04/23/helloblog/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="hello blog">hello blog</span>
+            <span class="post-date" title="2022-04-23 19:55:14">2022/04/23</span>
+        </a>
+        
+        <a  class="All "
+           href="/2022/04/23/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2022-04-23 16:02:31">2022/04/23</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-Hummer的通信机制" class="article article-type-post" itemscope itemprop="blogPost">
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2022-09-05 23:39:00'>2022-09-05 15:35</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="toc-text">Hummer的通信机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#amp-x20-%E5%88%9D%E5%A7%8B%E5%8C%96Hummer%EF%BC%9A%E5%AE%89%E8%A3%85%E5%BC%95%E6%93%8E"><span class="toc-text">&amp;#x20;初始化Hummer：安装引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E5%83%8F%E5%BF%98%E4%BA%86%E7%82%B9%E4%B8%9C%E8%A5%BF%EF%BC%9F"><span class="toc-text">好像忘了点东西？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%9A%E6%89%A7%E8%A1%8C-JS-%E4%BB%A3%E7%A0%81%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="toc-text">准备控制器：执行 JS 代码的必要条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-HMJSContext-%E7%9A%84%E7%AC%AC%E4%BA%8C%E4%BB%B6%E5%80%BC%E5%BE%97%E4%B8%80%E8%AF%B4%E7%9A%84%E4%BA%8B"><span class="toc-text">初始化 HMJSContext 的第二件值得一说的事</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#index-ts"><span class="toc-text">index.ts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HummerBase-ts"><span class="toc-text">HummerBase.ts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#injectClassModel-ts"><span class="toc-text">injectClassModel.ts</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%88%E4%BA%8E%EF%BC%9A%E6%89%A7%E8%A1%8C-JS-%E4%BB%A3%E7%A0%81"><span class="toc-text">终于：执行 JS 代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-text">参考文档</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-6 i,
+    .toc-level-6 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Hummer的通信机制"><a href="#Hummer的通信机制" class="headerlink" title="Hummer的通信机制"></a>Hummer的通信机制</h1><p>—— 一个跨端框架应该要怎么通信？</p>
+<p>世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫<strong>星河</strong>。</p>
+<p>还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactNative，Weex，还有今天我要说的 Hummer。</p>
+<hr>
+<p>在开发需求的过程中，有一些问题常常萦绕在我的头脑中：</p>
+<p><strong>在 Native 侧需要做什么工作，才能把TypeScript 代码运行起来？</strong></p>
+<p>或者问得更具体点：</p>
+<p><strong>一个 Hello world 的文字怎么才能通过几行 TypeScript 代码，就能显示到手机屏幕上？</strong></p>
+<hr>
+<h1 id="amp-x20-初始化Hummer：安装引擎"><a href="#amp-x20-初始化Hummer：安装引擎" class="headerlink" title="&amp;#x20;初始化Hummer：安装引擎"></a>&amp;#x20;初始化Hummer：安装引擎</h1><p><img src="/image/image_bVcTLCP6tv.png"></p>
+<p>像汽车一样，想让Hummer运行，车子先要有引擎</p>
+<pre><code class="objective-c">[Hummer startEngine:nil];
+</code></pre>
+<p>这行代码做了什么？</p>
+<ol>
+<li><p>加载所有<strong>已经导出的类</strong></p>
+<blockquote>
+<p>什么叫「导出的类 Exported Class」？指的是那些在 Native 侧已经写好了，TypeScript 代码可以使用的类。导出的方法，导出的属性同理。</p>
+</blockquote>
+<blockquote>
+<p>那什么叫<strong>加载</strong>呢？就是把这些Native 类起一个objc 的类名，再起一个 js 类名，然后放入一个 dictionary 中，这样既可以通过 objc 类名获取到这个类，也能通过 js 类名获取到这个类。一类，两名。就像给我家的仆人起一个中文名玛丽，起一个英文名 Mary，那既可以通过「玛丽」呼唤她，也可以通过「Mary」呼唤她。</p>
+</blockquote>
+</li>
+<li><p>加载所有<strong>导出的方法和属性</strong></p>
+</li>
+<li><p>确定导出类的父类关系</p>
+<p>比如我们已经加载了 ABCD 四个导出类，那其中的 A 类可能是继承B 类的，那么就要把这个父类关系给记录下来，记录在 A 类的superClassReference属性中即可（注意这里确定的 是js组件的继承关系，比如 Text 继承自 View）</p>
+</li>
+</ol>
+<p>点火的结果是我们得到了一个 HMExportManager ，它里边有许许多多加载好的<strong>类、方法和属性</strong>。这时Hummer 已经有了动力来源了。</p>
+<h2 id="好像忘了点东西？"><a href="#好像忘了点东西？" class="headerlink" title="好像忘了点东西？"></a>好像忘了点东西？</h2><p>在开始的开始，<strong>导出类是哪里来的？</strong> 我没有写导出的代码，那一定是Hummer 自己写的，神奇的事情发生在这里（我们随便找个类）</p>
+<p><img src="/image/image_q210gVqEgd.png"></p>
+<p>点进去看实现：</p>
+<p>用到了__attribute__((section(“name”))) ,这个编译属性，改变了数据的存储特性。也就是说通过魔法一般的代码，我们得以在编译链接的时候就把对应的结构体（也就是 HMExportStruct）写到可执行文件 Mach-O 中，在后续的初始化代码中能读出来。</p>
+<blockquote>
+<p><a href="https://developer.arm.com/documentation/dui0474/g/using-scatter-files/using---attribute----section--name-----to-place-code-and-data" title="ARM 文档">ARM 文档</a>在这里，有兴趣就点去看看吧。<br>used 参数是告诉编译器：不管我用不用都<strong>不需要</strong>优化掉这个函数。这里<a href="https://www.jianshu.com/p/6fc9974f515a" title="有一篇文章">有一篇文章</a>讲了怎么使用这个编译属性</p>
+</blockquote>
+<p><strong>于是我们的疑惑得以解开了：</strong></p>
+<blockquote>
+<p>举个<strong>栗子</strong>🌰给观众朋友们整明白点：<br>我们在 .m 文件中写下 HM_EXPORT_CLASS(Loading, HMActivityIndicatorView)，<br>就足以让编译器把对应的 __hm_export_class_Loding__ 结构体写到 Mach-O 文件中，最后在startEngine 的时候就能获取到对应的导出类。</p>
+</blockquote>
+<h1 id="准备控制器：执行-JS-代码的必要条件"><a href="#准备控制器：执行-JS-代码的必要条件" class="headerlink" title="准备控制器：执行 JS 代码的必要条件"></a>准备控制器：执行 JS 代码的必要条件</h1><p>通过 startEngine，我们的 Hummer 项目在客观上有了上路奔驰的能力，但是，还没有一个操作系统，没有油门、方向盘、换挡杆等一系列跟车子交流的能力，我们无法（<strong>从 JS 侧</strong>）控制Hummer框架。</p>
+<p><img src="/image/image_eDrwX0JXxU.png"></p>
+<p>所以这时我们还需要初始化这个「<strong>中间者</strong>」，它就是：</p>
+<p><strong>HMJSContext</strong>：<strong>跨端层</strong>，负责 Native 和 JS 之间的通信。</p>
+<pre><code class="objective-c">// HMViewController.m
+- (void)renderWithScript:(NSString *)script &#123;
+   ...
+    //渲染脚本之前 需要注册bridge
+    HMJSContext *context = [HMJSContext contextInRootView:self.hmRootView];
+    self.context = context;
+   ...
+    
+    //执行脚本
+    [context evaluateScript:script fileName:self.URL];
+   ...
+&#125;
+</code></pre>
+<p>初始化 HMJSContext ，有五件事情要做</p>
+<ol>
+<li><p>读取 Hummer bundle 文件中的 builtin.js 文件</p>
+</li>
+<li><p><strong>初始化 HMJSCExecutor（这个是 context 的核心，作用后面讲）</strong></p>
+</li>
+<li><p>**执行 builtin.js **</p>
+</li>
+<li><p>把 Native 端的类信息（startEngine 的时候生成的），包装成 JS 兼容的格式</p>
+</li>
+<li><p>把上面包装的信息注册到 JS 侧</p>
+</li>
+</ol>
+<p>&amp;#x20;先做个结论：<strong>HMJSContext 初始化之后，车子就有了方向盘，就有了点火器，就有了油门，有了一切该有的，只要来个人就能把这辆车开起来了。</strong></p>
+<hr>
+<p>然后我们再细看这五件事情。虽然有五件，但是只有两件事需要说</p>
+<ul>
+<li><p>初始化 HMJSCExecutor</p>
+</li>
+<li><p>执行 builtin.js</p>
+</li>
+</ul>
+<p>可以把HMJSCExecutor 看做是HMJSContext的<strong>打手</strong>，嫡系，核心下属，因为Executor，听名字就知道，就是负责 execute的，<strong>「执行 JS 代码，以及监听 JS 调用 Native 的回调。」</strong></p>
+<p>来看看它的初始化函数</p>
+<pre><code class="objective-c">- (instancetype)init &#123;
+...
+    // 共用一个 JS 环境
+    if (!virtualMachineRef) &#123;
+        virtualMachineRef = JSContextGroupCreate();
+    &#125;
+...
+    [HMExecutorMap setObject:self forKey:[NSValue valueWithPointer:_contextRef]];
+
+    // 注入对象
+    
+    // 生成 JS 字符串
+    JSStringRef hummerCallString = JSStringCreateWithUTF8CString(&quot;hummerCall&quot;);
+    JSStringRef hummerCreateString = JSStringCreateWithUTF8CString(&quot;hummerCreate&quot;);
+    ...
+    JSObjectRef globalThis = JSContextGetGlobalObject(_contextRef);
+
+    // 创建 C 函数的 bridge
+    JSObjectRef nativeLoggingHookFunction = JSObjectMakeFunctionWithCallback(_contextRef, NULL, &amp;nativeLoggingHook);
+    JSObjectRef inlineHummerCallFunction = JSObjectMakeFunctionWithCallback(_contextRef, NULL, &amp;hummerCall);
+    ...
+    JSValueRef exception = NULL;
+    
+    // 把 bridge 绑定到 JS 环境的 Global 对象上, 后面可以通过 globalThis.method() 来调用这里绑定好的函数
+    JSObjectSetProperty(_contextRef, globalThis, nativeLoggingHookStringRef, nativeLoggingHookFunction, kJSPropertyAttributeReadOnly | kJSPropertyAttributeDontDelete, &amp;exception);
+    JSObjectSetProperty(_contextRef, globalThis, hummerCallString, inlineHummerCallFunction, kJSPropertyAttributeReadOnly | kJSPropertyAttributeDontDelete, &amp;exception);
+    ...
+&#125;
+</code></pre>
+<blockquote>
+<p>JSObjectMakeFunctionWithCallback：把 C 函数的 callback 注册到 JS 侧，比如JS 调用hummerCall时，就会直接调用 C 函数「hummerCall」</p>
+</blockquote>
+<p>一句话概括就是：注册了一些 <strong>C 函数</strong>给 JS。</p>
+<hr>
+<p>等等，写到这儿我已经有点迷糊了，简单概括一下</p>
+<p><strong>Hummer 有了引擎之后，我们需要有一个HMJSContext来控制它，于是就得去初始化这玩意儿：创建一个HMJSCExecutor，注册了一些 C 函数给 JS。</strong></p>
+<p>OK，我们继续。</p>
+<p>那接下来就是说说注册的都是些什么函数？</p>
+<ol>
+<li><p>hummerCall：js 侧调用 Native方法（类方法和成员方法）</p>
+</li>
+<li><p>hummerCreate：创建Native对象，并返回 js 指针来持有这个对象</p>
+</li>
+<li><p>hummerGetProperty：（获取对象的属性值）</p>
+</li>
+<li><p>hummerSetProperty：（设置对象的属性值）</p>
+</li>
+<li><p>hummerCallFunction：（调用闭包函数 closure）</p>
+</li>
+</ol>
+<blockquote>
+<p>这五个函数，都会在执行 builtin.js 文件的时候使用到。所以注意看index.ts，HummerBase.ts，injectClassModel.ts这几个文件</p>
+</blockquote>
+<p>不管是hummerCall 还是hummerGetProperty、hummerSetProperty，他们都调用了下面这个函数：</p>
+<pre><code class="objective-c">- (JSValueRef)hummerGetSetPropertyWithArgumentCount:(size_t)argumentCount 
+                                          arguments:(const JSValueRef _Nonnull[])arguments 
+                                           isSetter:(BOOL)isSetter &#123;
+                      
+    1. 判断是类方法还是成员方法
+    2. 根据 arguments 获取到 target, method 和 methodSignature
+    3. 组装成 NSInvocation 并转发消息
+    4. 返回结果              
+  &#125;
+</code></pre>
+<p><strong>这就是 HMJSCExecutor 的初始化工作。</strong></p>
+<hr>
+<h3 id="初始化-HMJSContext-的第二件值得一说的事"><a href="#初始化-HMJSContext-的第二件值得一说的事" class="headerlink" title="初始化 HMJSContext 的第二件值得一说的事"></a>初始化 HMJSContext 的第二件值得一说的事</h3><p>执行 builtin.js。</p>
+<p>找一下，发现在这儿</p>
+<p><img src="/image/image_hTt0-neHh7.png"></p>
+<p>但是这个打开一看，您猜怎么着？混淆过的，看不了。那怎么办呢？把 Hummer 工程一整个 clone 下来，整这个路径：Hummer&#x2F;iOS&#x2F;builtin&#x2F;src&#x2F;。</p>
+<p>底下有若干个文件，据可靠消息，这几个文件就是混淆后的 builtin.js 文件</p>
+<h4 id="index-ts"><a href="#index-ts" class="headerlink" title="index.ts"></a>index.ts</h4><p>这个文件是给 globalThis 注册很多方法，但是<strong>没有调用</strong>，比如<strong>hummerLoadClass <strong>（这个是个非常重要的方法，执行完了 builtin.js 后，Native 侧又</strong>特地调用</strong>了这个 <strong>hummerLoadClass</strong>，在HMJSContext#init ）</p>
+<blockquote>
+<p><strong>hummerLoadClass</strong> 的作用是：<strong>将Native导出类的信息全部注册到 JS 侧</strong>。入参就是一个 JSON 字符串，在HMJSContext#init() 的倒数第二行可以看到具体的执行代码</p>
+</blockquote>
+<h4 id="HummerBase-ts"><a href="#HummerBase-ts" class="headerlink" title="HummerBase.ts"></a>HummerBase.ts</h4><p>据说是所有注册到 js 侧的类的基类</p>
+<h4 id="injectClassModel-ts"><a href="#injectClassModel-ts" class="headerlink" title="injectClassModel.ts"></a>injectClassModel.ts</h4><p>上面的<strong>hummerLoadClass</strong> 注册信息时，循环调用<strong>injectClassModel</strong> 方法来完成注册的。调用一次，注册一个导出类的信息。</p>
+<pre><code class="javascript">export default function injectClassModel(jsClassName: string, classModel: ClassModel, classModelMap: Record&lt;string, ClassModel | undefined | null&gt;): typeof HummerBase | undefined &#123;
+
+    let jsClass = HummerBase
+    if (isNotEmptyString(classModel.superClassName) &amp;&amp; classModelMap[classModel.superClassName]) &#123;
+        if (typeof globalThis[classModel.superClassName] !== &#39;function&#39;) &#123;
+            //  0. 有父类并且父类没有注入则先注入父类
+            const innerLoaderClassModel = classModelMap[classModel.superClassName]
+            if (innerLoaderClassModel) &#123;
+                const superClass = injectClassModel(classModel.superClassName, innerLoaderClassModel, classModelMap)
+                if (superClass) &#123;
+                    jsClass = superClass
+                &#125;
+            &#125;
+        &#125; else &#123;
+            jsClass = globalThis[classModel.superClassName]
+        &#125;
+    &#125;
+    jsClass = class extends jsClass &#123; &#125;
+    classModel.methodPropertyList?.forEach(methodPropertyModel =&gt; &#123;
+        // 这里是重点，但是没看懂
+        const prototypeOrClsss = methodPropertyModel.isClass ? jsClass : jsClass.prototype
+        // 注入方法
+        if (methodPropertyModel.isMethod) &#123;
+            prototypeOrClsss[methodPropertyModel.nameString] = function (...args: unknown[]) &#123;
+                if (isOfType&lt;HummerBase&gt;(this, &#39;_private&#39;)) &#123;
+                    // 之前在 Native 给 globalThis 注册的 hummerCall 在这时候派上用场了
+                    return globalThis.hummerCall(this._private, jsClassName, methodPropertyModel.nameString, ...args)
+                &#125; else &#123;
+                    // 类方法调用
+                    return globalThis.hummerCall(jsClassName, methodPropertyModel.nameString, ...args)
+                &#125;
+            &#125;
+        &#125; else &#123;
+            Object.defineProperty(prototypeOrClsss, methodPropertyModel.nameString, &#123;
+                // getter setter 注册
+                get: function (this: HummerBase | unknown) &#123;
+                    if (isOfType&lt;HummerBase&gt;(this, &#39;_private&#39;)) &#123;
+                        return globalThis.hummerGetProperty(this._private, jsClassName, methodPropertyModel.nameString)
+                    &#125; else &#123;
+                        return globalThis.hummerGetProperty(jsClassName, methodPropertyModel.nameString)
+                    &#125;
+                &#125;,
+                set: function (this: HummerBase | unknown, newValue: unknown) &#123;
+                    if (isOfType&lt;HummerBase&gt;(this, &#39;_private&#39;)) &#123;
+                        return globalThis.hummerSetProperty(this._private, jsClassName, methodPropertyModel.nameString, newValue)
+                    &#125; else &#123;
+                        return globalThis.hummerSetProperty(jsClassName, methodPropertyModel.nameString, newValue)
+                    &#125;
+                &#125;
+            &#125;)
+        &#125;
+    &#125;)
+    // 给 jsClass 添加 name 属性，值是 jsClassName（比如 &#39;Text&#39;）       
+    Object.defineProperty(jsClass, &#39;name&#39;, &#123; value: jsClassName &#125;)
+    // 将 jsClass 挂载到 globalThis 上
+    globalThis[jsClassName] = jsClass
+
+    return jsClass // 不返也行，反正也没用
+&#125;
+</code></pre>
+<h1 id="终于：执行-JS-代码"><a href="#终于：执行-JS-代码" class="headerlink" title="终于：执行 JS 代码"></a>终于：执行 JS 代码</h1><p>等执行了 builtin.js, 再执行 JS 函数 <strong>hummerLoadClass</strong>，Hummer 这车引擎有了，控制器方向盘油门什么的也齐了，可以开车上路，执行业务开发者写的 ts 代码了，比如：</p>
+<pre><code class="javascript">import &#123;Hummer,View, Text&#125; from &#39;@hummer/hummer-front&#39;
+class RootView extends View &#123;
+  constructor() &#123;
+    super();
+    this.style = &#123;
+      width: &#39;100%&#39;,
+      height: &#39;100%&#39;,
+      alignItems: &#39;flex-start&#39;,
+      justifyContent: &#39;center&#39;
+    &#125;
+    this.initElement()
+  &#125;
+
+  initElement()&#123;
+    this.appendText(&#39;~ Hello Hummer ~&#39;)
+  &#125;
+
+  appendText(message:string)&#123;
+    var text = new Text()
+    text.style = &#123;
+      fontSize: 20,
+    &#125;
+
+    text.text = message
+    this.appendChild(text);
+  &#125;
+&#125;
+
+// 根页面渲染
+Hummer.render(new RootView());
+</code></pre>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们收拾一下思路，问出一个可以概括本篇文章的问题：</p>
+<p><strong>如何实现一个跨端框架？</strong></p>
+<p>首先，你要在 Native 侧要实现很多很多个类，这样js 侧才有东西可以调用。不仅要实现，还得把这些类信息记录下来放到一个对象中，在运行的时候 js 侧通过这个对象能找到这些类。</p>
+<p>其次，你要创建 js 侧调用 Native的口子，要把某些必不可少的 C 函数注册到 js 侧，执行 Hummer 内置的builtin.js ，把 js 环境倒腾好。js 侧要只能有哪些类，并且能调用这些类，创建 Native 对象，跟 Native 对象交互。</p>
+<p><strong>此时，跨端框架已经准备好运行业务代码了。</strong></p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><p>跨端框架 Hummer 通信机制 - iOS 版（滴滴内部资料）</p>
+</li>
+<li><p><a href="https://www.jianshu.com/p/6fc9974f515a?u_atoken=4e84bfbb-0d2e-4dd6-99bc-bf376df6aa9f&u_asession=01-huAtRfx0hH5UHzwe8Lh1s7DC96dFR0qdNL_EgJm1fu2KgW8m8woPJnOYLo65jzIX0KNBwm7Lovlpxjd_P_q4JsKWYrT3W_NKPr8w6oU7K-99uxyLsFnLLOQ3YDOLFetPIF6hypDqzN_tz02ZDuS7GBkFo3NEHBv0PZUm6pbxQU&u_asig=053oswMXvKuIBz4WVlP8kItSqk3YST1EJuHkD2nP-UJVOYAznuMy2S0H_UNoC1GqgFS_0k5IkAplJG2_ZzculU_tdvMS4FknKIlUSJscxog5mvHbREZZYDHcYd9TT8p6p9mHIow13wRLoBvk1stpyXtRF3Q4RMUR8-fDCOzTWd9dT9JS7q8ZD7Xtz2Ly-b0kmuyAKRFSVJkkdwVUnyHAIJzWa_ZlFcbc1GNzPML23AOVWwB8kYhvUlAIbkfK006hx-HLC90DffcRgc58NhmjbgM-3h9VXwMyh6PgyDIVSG1W-VyZZSvkD2KpzhcSb3FsM0-ugCNFY0FZyNegwerOk566aGIEHC8TOnb34QgAOin7eHYTj2zIIrFgiM-Kc-R44omWspDxyAEEo4kbsryBKb9Q&u_aref=V231vK39fNOpAG/085YUfwQtIvQ=" title="__data在编译阶段处理协议">__data在编译阶段处理协议</a></p>
+</li>
+<li><p><a href="https://developer.arm.com/documentation/dui0474/g/using-scatter-files/using---attribute----section--name-----to-place-code-and-data" title="Using ">Using </a><a href="https://developer.arm.com/documentation/dui0474/g/using-scatter-files/using---attribute----section--name-----to-place-code-and-data" title="attribute"><strong>attribute</strong></a><a href="https://developer.arm.com/documentation/dui0474/g/using-scatter-files/using---attribute----section--name-----to-place-code-and-data" title="((section(&quot;name&quot;))) to place code and data">((section(“name”))) to place code and data</a>（就那个宏的文档）</p>
+</li>
+<li><p><a href="https://docs.ultralig.ht/docs/calling-a-c-function-from-js" title="Calling a C Function From JS">Calling a C Function From JS</a></p>
+</li>
+</ul>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 wymannpan@foxmail.com </span>
+    </div>
+</article>
+
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2021-2022  淮
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://img1.artron.net/auction/2020/art517681/d/art5176810663.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+<div class="mobile-menus-out" >
+
+</div>
+<div class="mobile-menus">
+    
+    
+    <a class="dynamic-menu site_url"   href="/photo">相册</a>
+    
+    
+    <a class="dynamic-menu " target="_self"   href="http://yelog.org/">叶落阁</a>
+    
+    
+    <a class="dynamic-menu " target="_blank"  href="https://github.com/yelog">github</a>
+    
+</div>
+
+
+</html>
