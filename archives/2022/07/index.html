@@ -6,25 +6,23 @@
   <meta name="keywords" content="">
   <meta name="description" content="湖中焉得更有此人">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="Hummer的通信机制—— 一个跨端框架应该要怎么通信？ 世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫星河。 还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactN">
+<meta name="description" content="前言CocoaPods 是我现在每天使用的第三方依赖管理库，精通pod install ，pod install —repo update ，删除 Podfile.lock文件等操作。 我从没觉得这有什么了不起的。直到在一次面试中字节跳动的面试官问我：CocoaPods 的原理是什么？ 像我这样年轻的程序员不应该满足于完成日常开发任务，了解下 CocoaPods吧。 CocoaPods 为什么可">
 <meta property="og:type" content="article">
-<meta property="og:title" content="湖中焉得更有此人">
-<meta property="og:url" content="http://example.com/2022/09/05/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:title" content="关于Cocoapods你想要了解的一切">
+<meta property="og:url" content="http://example.com/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
-<meta property="og:description" content="Hummer的通信机制—— 一个跨端框架应该要怎么通信？ 世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫星河。 还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactN">
+<meta property="og:description" content="前言CocoaPods 是我现在每天使用的第三方依赖管理库，精通pod install ，pod install —repo update ，删除 Podfile.lock文件等操作。 我从没觉得这有什么了不起的。直到在一次面试中字节跳动的面试官问我：CocoaPods 的原理是什么？ 像我这样年轻的程序员不应该满足于完成日常开发任务，了解下 CocoaPods吧。 CocoaPods 为什么可">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/image/image_bVcTLCP6tv.png">
-<meta property="og:image" content="http://example.com/image/image_q210gVqEgd.png">
-<meta property="og:image" content="http://example.com/image/image_eDrwX0JXxU.png">
-<meta property="og:image" content="http://example.com/image/image_hTt0-neHh7.png">
-<meta property="article:published_time" content="2022-09-05T07:35:16.000Z">
-<meta property="article:modified_time" content="2022-09-05T15:39:00.341Z">
+<meta property="og:image" content="http://example.com/image/cocoapods.png">
+<meta property="article:published_time" content="2022-09-12T07:49:14.000Z">
+<meta property="article:modified_time" content="2022-09-12T08:59:36.288Z">
 <meta property="article:author" content="淮">
+<meta property="article:tag" content="iOS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/image/image_bVcTLCP6tv.png">
+<meta name="twitter:image" content="http://example.com/image/cocoapods.png">
 
 
-<link rel="icon" href="/avatar/westLake.jpg">
+<link rel="icon" href="/img/westLake.jpeg">
 
 <link href="/css/style.css?v=1.1.0" rel="stylesheet">
 
@@ -66,7 +64,7 @@
         <a href="/"
    class="avatar_target">
     <img class="avatar"
-         src="/avatar/westLake.jpg"/>
+         src="/img/westLake.jpeg"/>
 </a>
 <div class="author">
     <span>淮</span>
@@ -79,7 +77,9 @@
                href="https://github.com/wymann01"
                target="_blank">
                 
-                    <i class="iconfont icon-github"></i>
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
                 
             </a>
         
@@ -89,7 +89,9 @@
                href="https://www.jianshu.com/u/e8666e7ba998"
                target="_blank">
                 
-                    <i class="iconfont icon-jianshu"></i>
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-jianshu"></use>
+                    </svg>
                 
             </a>
         
@@ -99,7 +101,9 @@
                href="mailto:wymannpan@foxmail.com"
                target="_blank">
                 
-                    <i class="iconfont icon-email"></i>
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
                 
             </a>
         
@@ -109,7 +113,9 @@
                href="http://wpa.qq.com/msgrd?v=3&uin=1103584503&site=qq&menu=yes"
                target="_blank">
                 
-                    <i class="iconfont icon-qq"></i>
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
                 
             </a>
         
@@ -125,10 +131,24 @@
     <li>
         <div class="all active" data-rel="All">All
             
-                <small>(6)</small>
+                <small>(4)</small>
             
         </div>
     </li>
+    
+        
+            
+                <li>
+                    <div data-rel="大前端">
+                        
+                        大前端
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
     
 </ul>
 <div class="left-bottom">
@@ -138,12 +158,6 @@
                 <a class="dynamic-menu site_url"
                    
                    href="/photo">相册</a>
-        
-            
-                <a class="dynamic-menu "
-                   target="_self"
-                   
-                   href="http://yelog.org/">叶落阁</a>
         
             
                 <a class="dynamic-menu "
@@ -161,7 +175,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="6">
+<input type="hidden" id="yelog_site_posts_number" value="4">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -177,8 +191,6 @@
     </div>
     <div class="friends-content">
         <ul>
-            
-            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
             
         </ul>
     </div>
@@ -207,6 +219,18 @@
     <input id="tag-search" />
     <div class="tag-wrapper">
         
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>面试</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>hummer</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>iOS</a>
+            </li>
+        
     </div>
 
 </div>
@@ -215,51 +239,35 @@
     <nav id="title-list-nav">
         
         <a  class="All "
-           href="/2022/09/05/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/"
-           data-tag=""
+           href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/"
+           data-tag="iOS"
            data-author="" >
-            <span class="post-title" title=""></span>
-            <span class="post-date" title="2022-09-05 15:35:16">2022/09/05</span>
+            <span class="post-title" title="关于Cocoapods你想要了解的一切">关于Cocoapods你想要了解的一切</span>
+            <span class="post-date" title="2022-09-12 15:49:14">2022/09/12</span>
         </a>
         
         <a  class="All "
-           href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/"
+           href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/"
            data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hummer 的通信机制">Hummer 的通信机制</span>
+            <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
+        </a>
+        
+        <a  class="All 大前端 "
+           href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/"
+           data-tag="hummer"
            data-author="" >
             <span class="post-title" title="跨端框架Hummer 是如何渲染的？（iOS 版)">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
             <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
         </a>
         
         <a  class="All "
-           href="/2022/05/22/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title=""></span>
-            <span class="post-date" title="2022-05-22 10:04:32">2022/05/22</span>
-        </a>
-        
-        <a  class="All "
            href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/"
-           data-tag=""
+           data-tag="面试"
            data-author="" >
             <span class="post-title" title="performSelector 详解——从 What 到 When">performSelector 详解——从 What 到 When</span>
             <span class="post-date" title="2022-05-01 22:55:14">2022/05/01</span>
-        </a>
-        
-        <a  class="All "
-           href="/2022/04/23/helloblog/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="hello blog">hello blog</span>
-            <span class="post-date" title="2022-04-23 19:55:14">2022/04/23</span>
-        </a>
-        
-        <a  class="All "
-           href="/2022/04/23/hello-world/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Hello World">Hello World</span>
-            <span class="post-date" title="2022-04-23 16:02:31">2022/04/23</span>
         </a>
         
         <div id="no-item-tips">
@@ -283,7 +291,7 @@
         <article class="index">
             <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Why-Blog"><span class="toc-text">Why Blog</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%8D%9A%E5%AE%A2%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">对博客的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%8F%B6%E8%90%BD%E9%98%81"><span class="toc-text">关于叶落阁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E5%B9%B3%E5%8F%B0"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E4%BD%9C%E8%80%85"><span class="toc-text">关于作者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E5%B9%B3%E5%8F%B0"><span class="toc-text">博客平台</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -296,29 +304,9 @@
     }
 </style>
 </div>
-            <h1 id="Why-Blog"><a href="#Why-Blog" class="headerlink" title="Why Blog"></a>Why Blog</h1><h2 id="对博客的理解"><a href="#对博客的理解" class="headerlink" title="对博客的理解"></a>对博客的理解</h2><p>喜欢写Blog的人，会经历三个阶段。</p>
-<blockquote>
-<p>第一阶段，刚接触Blog，觉得很新鲜，试着选择一个免费空间来写。</p>
-</blockquote>
-<blockquote>
-<p>第二阶段，发现免费空间限制太多，就自己购买域名和空间，搭建独立博客。</p>
-</blockquote>
-<blockquote>
-<p>第三阶段，觉得独立博客的管理太麻烦，最好在保留控制权的前提下，让别人来管，自己只负责写文章。</p>
-</blockquote>
-<p>我们每个人的在网络上产生的数据越来越多，这些信息是我们在互联网上存在过的痕迹，值得我们认真对待。但是它们被分散分布在各个网站上。很多时候我们很难将它们聚合在一起，而且各个网站的信息排布方式也没有办法自由控制，所以我们需要一个可以由自己主宰的空间——博客。</p>
-<p>通过博客，我们可以记录自己的生活和成长的轨迹。它不像 Twitter 那样碎片化，也不像 Facebook 那样关系化，它是私人的空间。</p>
-<h2 id="关于叶落阁"><a href="#关于叶落阁" class="headerlink" title="关于叶落阁"></a>关于叶落阁</h2><p><strong>叶落阁</strong> 是阁主（杨玉杰）的个人站。</p>
-<p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<p>本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次</p>
+            <h2 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h2><p>淮是互联网公司的一个小小工程师, 喜欢乒乓球, 唱歌和户外.</p>
+<p>到目前为止已经写了<code class="article_number"></code>篇文章.</p>
 <h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a href="https://hexo.io/">Hexo</a> 生成，部署在 <a href="https://pages.github.com/">GitHub Pages</a>主题 <a href="https://github.com/yelog/hexo-theme-3-hexo">3-hexo</a> 已经在github上开源</p>
-<p><code>3-hexo</code> 主题使用交流可以加 Q群: <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=e8cf083cc097141eaf323396f1766809b8e90ff00c67bb441898f672892f6904"><img data-ignore border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="3-hexo使用交流" title="3-hexo使用交流"></a></p>
-<p>主要功能：</p>
-<ul>
-<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
-<li>pad&#x2F;手机等移动端适配</li>
-<li>页面全局快捷键 <a href='http://yelog.org/2017/03/24/3-hexo-shortcuts/'>3-hexo快捷键说明</a></li>
-</ul>
 
         </article>
         
@@ -487,9 +475,6 @@
     
     
     <a class="dynamic-menu site_url"   href="/photo">相册</a>
-    
-    
-    <a class="dynamic-menu " target="_self"   href="http://yelog.org/">叶落阁</a>
     
     
     <a class="dynamic-menu " target="_blank"  href="https://github.com/yelog">github</a>
