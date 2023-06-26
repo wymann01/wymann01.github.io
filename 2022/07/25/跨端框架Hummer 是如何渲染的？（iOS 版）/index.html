@@ -1,358 +1,505 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
 <head>
-  <meta charset="utf-8">
-  <title>跨端框架Hummer 是如何渲染的？（iOS 版) | 湖中焉得更有此人</title>
-  <meta name="keywords" content=" hummer ">
-  <meta name="description" content="跨端框架Hummer 是如何渲染的？（iOS 版) | 湖中焉得更有此人">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="前言CocoaPods 是我现在每天使用的第三方依赖管理库，精通pod install ，pod install —repo update ，删除 Podfile.lock文件等操作。 我从没觉得这有什么了不起的。直到在一次面试中字节跳动的面试官问我：CocoaPods 的原理是什么？ 像我这样年轻的程序员不应该满足于完成日常开发任务，了解下 CocoaPods吧。 CocoaPods 为什么可">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="淮">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="淮">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Hummer是目前滴滴货运司机端正在使用的跨端框架，之前在开发需求的时候碰到了诡异的布局问题，由于自己是刚接触，完全不知道从哪里下手排查问题，于是请来了兄弟部门 Hummer iOS 现在的维护者史广远，看着他一步一步地打断点，打日志，最终成功定位问题，给出了解决方案。心里敬佩得很。 所以既为了以后开发能够有独立排查问题的能力，也为了提高自己对于跨端技术的理解，这就来整理了下Hummer 的渲染机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于Cocoapods你想要了解的一切">
-<meta property="og:url" content="http://example.com/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/index.html">
+<meta property="og:title" content="跨端框架Hummer 是如何渲染的？（iOS 版)">
+<meta property="og:url" content="http://example.com/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
-<meta property="og:description" content="前言CocoaPods 是我现在每天使用的第三方依赖管理库，精通pod install ，pod install —repo update ，删除 Podfile.lock文件等操作。 我从没觉得这有什么了不起的。直到在一次面试中字节跳动的面试官问我：CocoaPods 的原理是什么？ 像我这样年轻的程序员不应该满足于完成日常开发任务，了解下 CocoaPods吧。 CocoaPods 为什么可">
+<meta property="og:description" content="Hummer是目前滴滴货运司机端正在使用的跨端框架，之前在开发需求的时候碰到了诡异的布局问题，由于自己是刚接触，完全不知道从哪里下手排查问题，于是请来了兄弟部门 Hummer iOS 现在的维护者史广远，看着他一步一步地打断点，打日志，最终成功定位问题，给出了解决方案。心里敬佩得很。 所以既为了以后开发能够有独立排查问题的能力，也为了提高自己对于跨端技术的理解，这就来整理了下Hummer 的渲染机">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/image/cocoapods.png">
-<meta property="article:published_time" content="2022-09-12T07:49:14.000Z">
-<meta property="article:modified_time" content="2022-09-12T08:59:36.288Z">
+<meta property="og:image" content="http://example.com/image/hummerRender/hummer.png">
+<meta property="og:image" content="http://example.com/image/hummerRender/hierachy.png">
+<meta property="og:image" content="http://example.com/image/hummerRender/result.png">
+<meta property="og:image" content="http://example.com/image/hummerRender/render.png">
+<meta property="og:image" content="http://example.com/image/hummerRender/doubt.png">
+<meta property="article:published_time" content="2022-07-25T08:56:14.000Z">
+<meta property="article:modified_time" content="2022-09-12T09:12:21.882Z">
 <meta property="article:author" content="淮">
-<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="hummer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/image/cocoapods.png">
-
-
-<link rel="icon" href="/img/westLake.jpeg">
-
-<link href="/css/style.css?v=1.1.0" rel="stylesheet">
-
-<link href="/css/hl_theme/gruvbox-dark.css?v=1.1.0" rel="stylesheet">
-
-<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
-
-<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="/js/titleTip.js?v=1.1.0" ></script>
-
-<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<meta name="twitter:image" content="http://example.com/image/hummerRender/hummer.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>跨端框架Hummer 是如何渲染的？（iOS 版) · 淮&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
 <script>
-    hljs.initHighlightingOnLoad();
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
 </script>
 
-<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
 
+    body {
+        margin: 0;
+    }
 
-
-<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
-
-<script src="/js/iconfont.js?v=1.1.0" ></script>
-
-<meta name="generator" content="Hexo 6.1.0"></head>
-<div style="display: none">
-  <input class="theme_disqus_on" value="false">
-  <input class="theme_preload_comment" value="">
-  <input class="theme_blog_path" value="">
-  <input id="theme_shortcut" value="true" />
-  <input id="theme_highlight_on" value="true" />
-  <input id="theme_code_copy" value="true" />
-</div>
-
-
-
-<body>
-<aside class="nav">
-    <div class="nav-left">
-        <a href="/"
-   class="avatar_target">
-    <img class="avatar"
-         src="/img/westLake.jpeg"/>
-</a>
-<div class="author">
-    <span>淮</span>
-</div>
-
-<div class="icon">
-    
-        
-            <a title="github"
-               href="https://github.com/wymann01"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-github"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="jianshu"
-               href="https://www.jianshu.com/u/e8666e7ba998"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-jianshu"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="email"
-               href="mailto:wymannpan@foxmail.com"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-email"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="qq"
-               href="http://wpa.qq.com/msgrd?v=3&uin=1103584503&site=qq&menu=yes"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-qq"></use>
-                    </svg>
-                
-            </a>
-        
-    
-</div>
-
-
-
-    <a class="more-menus">更多菜单</a>
-
-
-<ul>
-    <li>
-        <div class="all active" data-rel="All">All
-            
-                <small>(4)</small>
-            
-        </div>
-    </li>
-    
-        
-            
-                <li>
-                    <div data-rel="大前端">
-                        
-                        大前端
-                        <small>(1)</small>
-                        
-                    </div>
-                    
-                </li>
-            
-        
-    
-</ul>
-<div class="left-bottom">
-    <div class="menus">
-        
-            
-                <a class="dynamic-menu site_url"
-                   
-                   href="/photo">相册</a>
-        
-            
-                <a class="dynamic-menu "
-                   target="_blank"
-                        
-                   href="https://github.com/yelog">github</a>
-        
-    </div>
-    <div>
-        
-            <a class="about  site_url"
-               
-               href="/about">About</a>
-        
-        
-    </div>
-</div>
-<input type="hidden" id="yelog_site_posts_number" value="4">
-
-<div style="display: none">
-    <span id="busuanzi_value_site_uv"></span>
-    <span id="busuanzi_value_site_pv"></span>
-</div>
-
-    </div>
-    <div class="nav-right">
-        <div class="friends-area">
-    <div class="friends-title">
-        Links
-        <i class="iconfont icon-left"></i>
-    </div>
-    <div class="friends-content">
-        <ul>
-            
-        </ul>
-    </div>
-</div>
-        <div class="title-list">
-    <div class="right-top">
-        <div id="default-panel">
-            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
-            <div class="right-title">All</div>
-            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
-        </div>
-        <div id="search-panel">
-            <i class="iconfont icon-left" data-title="返回"></i>
-            <input id="local-search-input" autocomplete="off"/>
-            <label class="border-line" for="input"></label>
-            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
-            <i class="iconfont icon-tag" data-title="标签"></i>
-        </div>
-        <div id="outline-panel" style="display: none">
-            <div class="right-title">大纲</div>
-            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
-        </div>
-    </div>
-
-    <div class="tags-list">
-    <input id="tag-search" />
-    <div class="tag-wrapper">
-        
-            <li class="article-tag-list-item">
-                <i class="iconfont icon-tag"></i><a>面试</a>
-            </li>
-        
-            <li class="article-tag-list-item">
-                <i class="iconfont icon-tag"></i><a>hummer</a>
-            </li>
-        
-            <li class="article-tag-list-item">
-                <i class="iconfont icon-tag"></i><a>iOS</a>
-            </li>
-        
-    </div>
-
-</div>
-
-    
-    <nav id="title-list-nav">
-        
-        <a  class="All "
-           href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/"
-           data-tag="iOS"
-           data-author="" >
-            <span class="post-title" title="关于Cocoapods你想要了解的一切">关于Cocoapods你想要了解的一切</span>
-            <span class="post-date" title="2022-09-12 15:49:14">2022/09/12</span>
-        </a>
-        
-        <a  class="All "
-           href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Hummer 的通信机制">Hummer 的通信机制</span>
-            <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
-        </a>
-        
-        <a  class="All 大前端 "
-           href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/"
-           data-tag="hummer"
-           data-author="" >
-            <span class="post-title" title="跨端框架Hummer 是如何渲染的？（iOS 版)">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
-            <span class="post-date" title="2022-07-25 16:56:14">2022/07/25</span>
-        </a>
-        
-        <a  class="All "
-           href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/"
-           data-tag="面试"
-           data-author="" >
-            <span class="post-title" title="performSelector 详解——从 What 到 When">performSelector 详解——从 What 到 When</span>
-            <span class="post-date" title="2022-05-01 22:55:14">2022/05/01</span>
-        </a>
-        
-        <div id="no-item-tips">
-
-        </div>
-    </nav>
-    <div id="outline-list">
-    </div>
-</div>
-
-    </div>
-    <div class="hide-list">
-        <div class="semicircle" data-title="切换全屏 快捷键 s">
-            <div class="brackets first"><</div>
-            <div class="brackets">&gt;</div>
-        </div>
-    </div>
-</aside>
-<div id="post">
-    <div class="pjax">
-        <article id="post-跨端框架Hummer 是如何渲染的？（iOS 版）" class="article article-type-post" itemscope itemprop="blogPost">
-    
-        <h1 class="article-title">跨端框架Hummer 是如何渲染的？（iOS 版)</h1>
-    
-    <div class="article-meta">
-        
-        
-        
-        <span class="book">
-            <i class="iconfont icon-category"></i>
-            
-            
-            <a  data-rel="大前端">大前端</a>
-            
-        </span>
-        
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color2">hummer</a>
-            
-        </span>
-        
-    </div>
-    <div class="article-meta">
-        
-            Created At : <time class="date" title='Updated At: 2022-09-12 17:12:21'>2022-07-25 16:56</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        
-        <span id="busuanzi_container_page_pv">
-            Views 👀 :<span id="busuanzi_value_page_pv">
-                <span class="count-comment">
-                    <span class="spinner">
-                      <div class="cube1"></div>
-                      <div class="cube2"></div>
-                    </span>
-                </span>
-            </span>
-        </span>
-        
-        
-    </div>
-    
-    <div class="toc-ref">
-    
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9E%E4%BE%8B%E5%8C%96%EF%BC%9A%E3%80%8C%E7%89%B9%E5%88%AB%E9%B8%A3%E8%B0%A2%E4%BD%A0%E5%88%B6%E9%80%A0%E6%9B%B4%E6%AC%A2%E4%B9%90%E7%9A%84%E6%88%91%E3%80%8D"><span class="toc-text">1 实例化：「特别鸣谢你制造更欢乐的我」</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E8%AE%BE%E7%BD%AE-style%EF%BC%9A"><span class="toc-text">2.1设置 style：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%AE%BE%E7%BD%AE-Property-%EF%BC%88%E6%AF%94%E5%A6%82-Text-%E7%9A%84-text-%E5%B1%9E%E6%80%A7%EF%BC%89"><span class="toc-text">2.2 设置 Property （比如 Text 的 text 属性）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-render%E6%B8%B2%E6%9F%93"><span class="toc-text">3 render渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-markDirty%EF%BC%9A"><span class="toc-text">4 markDirty：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-layout-%E5%B8%83%E5%B1%80"><span class="toc-text">5 layout 布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E6%B5%8B%E4%B9%A0%E9%A2%98"><span class="toc-text">自测习题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol>
-    
-<style>
-    .left-col .switch-btn,
-    .left-col .switch-area {
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
         display: none;
     }
-    .toc-level-6 i,
-    .toc-level-6 ol {
-        display: none !important;
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
     }
 </style>
-</div>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
     
-    <div class="article-entry" itemprop="articleBody">
-      
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>wymann01's Studio.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">wymann01&#39;s Studio.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">跨端框架Hummer 是如何渲染的？（iOS 版)</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                跨端框架Hummer 是如何渲染的？（iOS 版)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="hummer">hummer</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">3.1k</span>Reading time: <span class="post-count reading-time">14 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/07/25</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
         <p><a href="https://hummer.didi.cn/doc#/zh-CN/" title="Hummer"><strong>Hummer</strong></a>是目前滴滴货运司机端正在使用的跨端框架，之前在开发需求的时候碰到了诡异的布局问题，由于自己是刚接触，完全不知道从哪里下手排查问题，于是请来了兄弟部门 Hummer iOS 现在的维护者史广远，看着他一步一步地打断点，打日志，最终成功定位问题，给出了解决方案。心里敬佩得很。</p>
 <p>所以既为了以后开发能够有独立排查问题的能力，也为了提高自己对于跨端技术的理解，这就来整理了下Hummer 的渲染机制：</p>
 <p><img src="/../image/hummerRender/hummer.png"></p>
@@ -859,191 +1006,343 @@ Hummer.render(new RootView());
 <li><a href="https://hummer.didi.cn/home#/" title="Hummer">Hummer</a></li>
 </ul>
 
-      
-       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 wymannpan@foxmail.com </span>
-    </div>
-</article>
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">淮</a>
+            <p>Link：<a href="http://example.com/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/">http://example.com/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/</a>
+            <p>Publish date：<a href="http://example.com/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/">July 25th 2022, 4:56:14 pm</a>
+            <p>Update date：<a href="http://example.com/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/">September 12th 2022, 5:12:21 pm</a>
+            <p>License：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/" title="Hummer 的通信机制">
+                    <div class="nextTitle">Hummer 的通信机制</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/" title="performSelector 详解——从 What 到 When">
+                    <div class="prevTitle">performSelector 详解——从 What 到 When</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
 
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
 
 
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
 
 
+            
+            
 
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:wymann_pan@foxmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
     
 
 
-
-
-    </div>
+        </div>
+    
+    <!-- powered by Hexo  -->
     <div class="copyright">
-        <p class="footer-entry">
-    ©2021-2022  淮
-</p>
-<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
-
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
-    <div class="full-toc">
-        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
-<a class="" id="rocket" ></a>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9E%E4%BE%8B%E5%8C%96%EF%BC%9A%E3%80%8C%E7%89%B9%E5%88%AB%E9%B8%A3%E8%B0%A2%E4%BD%A0%E5%88%B6%E9%80%A0%E6%9B%B4%E6%AC%A2%E4%B9%90%E7%9A%84%E6%88%91%E3%80%8D"><span class="toc-number">1.</span> <span class="toc-text">1 实例化：「特别鸣谢你制造更欢乐的我」</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E8%AE%BE%E7%BD%AE-style%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">2.1设置 style：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%AE%BE%E7%BD%AE-Property-%EF%BC%88%E6%AF%94%E5%A6%82-Text-%E7%9A%84-text-%E5%B1%9E%E6%80%A7%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">2.2 设置 Property （比如 Text 的 text 属性）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-render%E6%B8%B2%E6%9F%93"><span class="toc-number">4.</span> <span class="toc-text">3 render渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-markDirty%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">4 markDirty：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-layout-%E5%B8%83%E5%B1%80"><span class="toc-number">6.</span> <span class="toc-text">5 layout 布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E6%B5%8B%E4%B9%A0%E9%A2%98"><span class="toc-number">8.</span> <span class="toc-text">自测习题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">9.</span> <span class="toc-text">参考文献</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 4
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/">关于Cocoapods你想要了解的一切</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/">Hummer 的通信机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/">跨端框架Hummer 是如何渲染的？（iOS 版)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/">performSelector 详解——从 What 到 When</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="面试">
+                <span class="iconfont-archer">&#xe606;</span>
+                面试
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="iOS">
+                <span class="iconfont-archer">&#xe606;</span>
+                iOS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hummer">
+                <span class="iconfont-archer">&#xe606;</span>
+                hummer
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="大前端">
+            <span class="iconfont-archer">&#xe60a;</span>
+            大前端
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
 
     </div>
 </div>
 
-</body>
-<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
-
-<script src="/js/script.js?v=1.1.0" ></script>
-<script>
-    var img_resize = 'default';
-    function initArticle() {
-        /*渲染对应的表格样式*/
-        
-            $("#post .pjax table").addClass("green_title");
-        
-
-        /*渲染打赏样式*/
-        
-
-        /*高亮代码块行号*/
-        
-
-        /*访问数量*/
-        
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
-        
-
-        /*代码高亮，行号对齐*/
-        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
-
-        
-        
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
     }
-
-    /*打赏页面隐藏与展示*/
-    
-
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "淮"
+    }
 </script>
 
-<!--加入行号的高亮代码块样式-->
-
-<!--自定义样式设置-->
-<style>
-    
-    
-    .nav {
-        width: 542px;
-    }
-    .nav.fullscreen {
-        margin-left: -542px;
-    }
-    .nav-left {
-        width: 120px;
-    }
-    
-    
-    @media screen and (max-width: 1468px) {
-        .nav {
-            width: 492px;
-        }
-        .nav.fullscreen {
-            margin-left: -492px;
-        }
-        .nav-left {
-            width: 100px;
-        }
-    }
-    
-    
-    @media screen and (max-width: 1024px) {
-        .nav {
-            width: 492px;
-            margin-left: -492px
-        }
-        .nav.fullscreen {
-            margin-left: 0;
-        }
-    }
-    
-    @media screen and (max-width: 426px) {
-        .nav {
-            width: 100%;
-        }
-        .nav-left {
-            width: 100%;
-        }
-    }
-    
-    
-    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
-        color: #383636;
-    }
-    
-    
-    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
-        color: #5e5e5f;
-    }
-    
-    
-    .nav-right nav a.hover, #local-search-result a.hover{
-        background-color: #e2e0e0;
-    }
-    
-    
-
-    /*列表样式*/
-    
-
-    /* 背景图样式 */
-    
-    
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
 
 
-    /*引用块样式*/
-    
-
-    /*文章列表背景图*/
-    
-    .nav-right:before {
-        content: ' ';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0.3;
-        background: url("https://img1.artron.net/auction/2020/art517681/d/art5176810663.jpg");
-        background-repeat: no-repeat;
-        background-position: 50% 0;
-        -ms-background-size: cover;
-        -o-background-size: cover;
-        -moz-background-size: cover;
-        -webkit-background-size: cover;
-        background-size: cover;
-    }
-    
-
-    
-</style>
-
-
-
-
-
-
-<div class="mobile-menus-out" >
-
-</div>
-<div class="mobile-menus">
-    
-    
-    <a class="dynamic-menu site_url"   href="/photo">相册</a>
-    
-    
-    <a class="dynamic-menu " target="_blank"  href="https://github.com/yelog">github</a>
-    
-</div>
-
-
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
 </html>
