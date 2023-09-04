@@ -16,22 +16,23 @@
   <meta name="author" content="淮">
   <meta name="keywords" content="">
   
-    <meta name="description" content="缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方">
+    <meta name="description" content="——使用Gesture  Recognizer来简化Touch处理和打造统一的用户体验 概述Gesture  Recognizer是处理点击和长按事件的最简单方法，你可以把一个或者几个Gesture  Recognizer附加到任何view上，它封装了处理和解释事件的所有逻辑，并把它们匹配到已知的模式。当检测到匹配，Gesture  Recognizer会通知特定对象，这个对象可以是view co">
 <meta property="og:type" content="article">
-<meta property="og:title" content="performSelector 详解——从 What 到 When">
-<meta property="og:url" content="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/index.html">
+<meta property="og:title" content="【翻译】Handling UIKit gestures 处理 UIkit 的 gesture">
+<meta property="og:url" content="http://example.com/2023/09/03/[%E7%BF%BB%E8%AF%91]Handling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
-<meta property="og:description" content="缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方">
+<meta property="og:description" content="——使用Gesture  Recognizer来简化Touch处理和打造统一的用户体验 概述Gesture  Recognizer是处理点击和长按事件的最简单方法，你可以把一个或者几个Gesture  Recognizer附加到任何view上，它封装了处理和解释事件的所有逻辑，并把它们匹配到已知的模式。当检测到匹配，Gesture  Recognizer会通知特定对象，这个对象可以是view co">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-01T14:55:14.000Z">
-<meta property="article:modified_time" content="2022-09-12T07:54:39.911Z">
+<meta property="og:image" content="https://secure2.wostatic.cn/static/x28vNKMSHe1uCEhoLp7jKF/image.png?auth_key=1693713746-wzAt9jYJhQBVMuQ56nASG1-0-0f4161c6ddfe64e69749b1a48aa44b1d">
+<meta property="article:published_time" content="2023-09-03T04:04:56.000Z">
+<meta property="article:modified_time" content="2023-09-03T04:21:29.039Z">
 <meta property="article:author" content="淮">
-<meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://secure2.wostatic.cn/static/x28vNKMSHe1uCEhoLp7jKF/image.png?auth_key=1693713746-wzAt9jYJhQBVMuQ56nASG1-0-0f4161c6ddfe64e69749b1a48aa44b1d">
   
   
   
-  <title>performSelector 详解——从 What 到 When - 湖中焉得更有此人</title>
+  <title>【翻译】Handling UIKit gestures 处理 UIkit 的 gesture - 湖中焉得更有此人</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="performSelector 详解——从 What 到 When"></span>
+            <span id="subtitle" data-typed-text="【翻译】Handling UIKit gestures 处理 UIkit 的 gesture"></span>
           
         </div>
 
@@ -208,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-05-01 22:55" pubdate>
-          2022年5月1日 晚上
+        <time datetime="2023-09-03 12:04" pubdate>
+          2023年9月3日 中午
         </time>
       </span>
     
@@ -220,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          2.1k 字
         
       </span>
     
@@ -231,7 +232,7 @@
         
         
         
-          29 分钟
+          18 分钟
         
       </span>
     
@@ -268,93 +269,54 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">performSelector 详解——从 What 到 When</h1>
+            <h1 id="seo-header">【翻译】Handling UIKit gestures 处理 UIkit 的 gesture</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>我最近被一位面试官问：</p>
-<ul>
-<li><p><code>performSelector</code> 是我们常用的方法，能不能从 <code>runloop</code> 的角度说说？</p>
-</li>
-<li><p><code>performSelector</code> 跟我们直接调用一个方法有什么区别？</p>
-</li>
-</ul>
-<p>一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连<code>performSelector</code> 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！</p>
-<h2 id="performSelector-是我们常用的方法，能不能从-runloop-的角度说说？"><a href="#performSelector-是我们常用的方法，能不能从-runloop-的角度说说？" class="headerlink" title="performSelector 是我们常用的方法，能不能从 runloop 的角度说说？"></a>performSelector 是我们常用的方法，能不能从 runloop 的角度说说？</h2><blockquote>
-<p>这个方法的入参是一个 selector，selector 属于 SEL类型，用来代表一个函数，实际上是一个 C 的 string。打印一个 selector 会得到对应方法的名字。详见<a href="https://developer.apple.com/documentation/objectivec/sel" title="官方文档">官方文档</a>。</p>
-</blockquote>
-<p>这里他要问的其实是<code>performSelector:withObject:afterDelay</code> 方法（Apple文档在<a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="这里">这里</a>），只有这个才跟 runloop 有关系。这个方法会生成一个定时器Timer，并把它添加到当前线程的 Runloop 上，到了预定时间后 Runloop 好去执行对应的 selector （即执行方法）。</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">
-+(void)performSelectorInMainThread &#123;
-    dispatch_async(dispatch_get_main_queue(), ^&#123;
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-    &#125;);
-&#125;
-
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
-&#125;</code></pre></div>
-
-<p>注意：如果是在<strong>子线程</strong>中调用performSelector:withObject:afterDelay 方法，那就得手动获取一下 runloop，同时得让子线程中的 runloop 处于 run 状态。<strong>因为子线程中的 Runloop 不是默认创建，更不会默认 Run 起来。</strong></p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">+(void)performSelectorInOtherThread &#123;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;
-        NSLog(@&quot;1&quot;);
-        NSRunLoop *runloop = [NSRunLoop currentRunLoop]; // 注释这句,则不会执行 test 方法
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-        [runloop run];// 注释这句,也不会执行 test 方法； 
-        //同时，这句需要放在 performSelector 后面，对应的 timer 才会被添加到 Runloop 中
-        NSLog(@&quot;3&quot;);
-    &#125;);
-&#125;
-
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
-&#125;</code></pre></div>
-
+                <p>——使用Gesture  Recognizer来简化Touch处理和打造统一的用户体验</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Gesture  Recognizer是处理点击和长按事件的最简单方法，你可以把一个或者几个Gesture  Recognizer附加到任何view上，它封装了处理和解释事件的所有逻辑，并把它们匹配到已知的模式。当检测到匹配，Gesture  Recognizer会通知特定对象，这个对象可以是view controller, view  本身，或者App中的其他对象。</p>
+<p>Gesture  Recognizer用 target-action模式来发送通知。当一个 </p>
+<p><a href="https://developer.apple.com/documentation/uikit/uitapgesturerecognizer?language=objc"><code>UITapGestureRecognizer</code></a>对象检测到view中的单指点击时，它会调用这个 view 的 view controller 里的action 函数。</p>
 <blockquote>
-<p>这里其实也可以引申两个问题：<br>1. 如何查看Runloop 拥有的「源」？<br>2. Runloop 在什么时候会退出？（在本示例代码中，“3”是在 Runloop退出的时候打印的，那 Runloop 怎么为啥会退出？）<br>想了解详情，请看<a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a></p>
+<p>译者注：这里的 action 函数指在Gesture  Recognizer 在创建时就定义好的、一旦触发就去调用的方法。下同。</p>
 </blockquote>
-<h2 id="performSelector-跟我们直接调用一个方法有什么区别？"><a href="#performSelector-跟我们直接调用一个方法有什么区别？" class="headerlink" title="performSelector 跟我们直接调用一个方法有什么区别？"></a>performSelector 跟我们直接调用一个方法有什么区别？</h2><p><code>performSelector</code>是运行时决议的，用<code>performSelector</code> 可以到运行时才决定要执行哪个方法，因此编译器不会检查 <code>performSelector</code>的入参所代表的<strong>方法</strong>是否已经被 <code>caller</code> 对象实现。（因此，这时你可以在「不 import 头文件」的情况下调用方法）</p>
-<p>而对于一般的方法调用，编译器会严格把控当前 caller 是否实现了该方法，如果没有，根本过不了编译。</p>
-<p>这就类似于 Java 语言中的「反射」机制。</p>
-<h2 id="performSelector-的使用"><a href="#performSelector-的使用" class="headerlink" title="performSelector 的使用"></a>performSelector 的使用</h2><p>因为对应的 selector 有可能实现，也可能没实现，所以它尝尝跟<code>respondsToSelector:</code> 搭配使用，如下代码：</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 检查 self 对象是否实现了 test 方法
-if([self respondsToSelector:@selector(test)]) &#123;
-    [self performSelector:@selector(test)];
-&#125;</code></pre></div>
-
-<p>另外，根据 Apple 的文档描述，performSelector 可能会带来内存管理问题：</p>
+<p><img src="https://secure2.wostatic.cn/static/x28vNKMSHe1uCEhoLp7jKF/image.png?auth_key=1693713746-wzAt9jYJhQBVMuQ56nASG1-0-0f4161c6ddfe64e69749b1a48aa44b1d" srcset="/img/loading.gif" lazyload></p>
+<h1 id="Gesture-recognizer-有两种：离散的和连续的"><a href="#Gesture-recognizer-有两种：离散的和连续的" class="headerlink" title="Gesture recognizer 有两种：离散的和连续的"></a>Gesture recognizer 有两种：<strong>离散</strong>的和<strong>连续</strong>的</h1><p>离散的Gesture recognizer在检测到手势后仅仅调用一次action 函数。</p>
+<p>而对于连续的Gesture  Recognize，在（手势）满足识别标准后，它会调用 action 方法很多次，只要手势事件里的信息有改变就会通知你。比如，一个<a href="https://developer.apple.com/documentation/uikit/uipangesturerecognizer?language=objc"><code>UIPanGestureRecognizer</code></a>对象会在每一次「触碰位置」改变时调用action 函数。</p>
+<p>Interface Builder 包含每一种标准的 UIKit Gesture  Recognizer对象，它还包含了自定义的Gesture  Recognizer，你可以用这个来代表你自己的Gesture  Recognizer子类</p>
 <blockquote>
-<p>But use caution when doing this. Different messages require different memory management strategies for their returned objects, and it might not be obvious which to use.<br>Usually the caller isn’t responsible for the memory of a returned object, but that’s not true when the selector is one of the creation methods, such as <a href="https://developer.apple.com/documentation/objectivec/nsobject/1418807-copy" title="copy">copy</a>. See <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html#//apple_ref/doc/uid/20000994" title="Memory Management Policy">Memory Management Policy</a> in <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i" title="Advanced Memory Management Programming Guide">Advanced Memory Management Programming Guide</a> for a description of ownership expectations. Depending on the structure of your code, it might not be clear which kind of selector you are using for any given invocation.<br>Due to this uncertainty, the compiler generates a warning if you supply a variable selector while using ARC to manage memory. Because it can’t determine ownership of the returned object at compile-time, ARC makes the assumption that the caller does <em>not</em> need to take ownership, but this may not be true. The compiler warning alerts you to the potential for a memory leak.</p>
+<p>后半句我也没看懂，原文如下：<br>It also includes a custom gesture recognizer object that you can use to represent your custom <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer?language=objc"><code>UIGestureRecognizer</code></a> subclasses.</p>
 </blockquote>
-<p>大意是，如果提供的 selector 是构造方法，那么可能会带来所有权的不确定，进一步导致<strong>内存泄漏</strong>的问题。如果确定 selector 不会返回值，建议改用<a href="https://developer.apple.com/documentation/objectivec/nsobject/1414900-performselectoronmainthread" title="performSelectorOnMainThread:withObject:waitUntilDone:">performSelectorOnMainThread:withObject:waitUntilDone:</a> 。也可以改用 NSInvokation，构建一个可以返回值的 message（selector 可以被看做是一个 message，因为 Objective-C 调用方法的方式是「消息转发」）</p>
-<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
-<li><p>动态化和组件化</p>
-</li>
-<li><p>多线程</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 主线程
-- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array;
-
-// 子线程
-- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array
+<h1 id="配置一个Gesture-Recognizer"><a href="#配置一个Gesture-Recognizer" class="headerlink" title="配置一个Gesture  Recognizer"></a><strong>配置一个Gesture  Recognizer</strong></h1><p>步骤：</p>
+<ol>
+<li>在storyboard中，拖一个Gesture  Recognizer到你的 VIew 上</li>
+<li>实现对应的 action 函数。查看接下来的代码</li>
+<li>将你的 action函数连到那个Gesture  Recognizer</li>
+</ol>
+<p>你可以在Interface Builder创建这个连接，只需要右击Gesture  Recognizer和连接它的Sent Action selector 到你接口中的合适对象。你也可以用纯代码的方式——<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer/1624230-addtarget?language=objc"><code>addTarget:action:</code></a>。</p>
+<p>以下代码展示了一个Gesture  Recognizer的 action 函数，它的一般形式：</p>
+<div class="code-wrapper"><pre><code class="hljs objc">- (<span class="hljs-keyword">IBAction</span>)myActionMethod:(<span class="hljs-built_in">UIGestureRecognizer</span>*)sender
 </code></pre></div>
-</li>
-<li><p>延后执行</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">[self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-</code></pre></div></li>
-</ul>
+
+<h1 id="响应手势"><a href="#响应手势" class="headerlink" title="响应手势"></a><strong>响应手势</strong></h1><p>action 函数提供了你的 App 对手势的反应。对于离散的Gesture  Recognizer，你的 action 函数会跟 UIButton的 action 函数差不多。一旦 action 函数执行，你就执行合理的任务。</p>
+<p>而对于连续的Gesture  Recognizer，你的 action 函数可以响应手势识别后，也可以在识别成功前跟踪事件。跟踪事件能够创造更有互动性的体验。例如，你可以<a href="https://developer.apple.com/documentation/uikit/uipangesturerecognizer?language=objc"><code>UIPanGestureRecognizer</code></a>对象里的「信息更新」来移动你App 里的内容。</p>
+<p>Gesture  Recognizer的<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer/1619998-state?language=objc"><code>state</code></a>属性，能告诉我们对象<strong>当前的识别状态</strong>。连续的Gesture  Recognizer的 state 属性，取值范围是<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatebegan?language=objc"><code>UIGestureRecognizerStateBegan</code></a> （开始）、 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatechanged?language=objc"><code>UIGestureRecognizerStateChanged</code></a> （改变）、 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a>（结束），还有 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatecancelled?language=objc"><code>UIGestureRecognizerStateCancelled</code></a>.（取消）。你可以在 action 函数里根据这个 state 来做操作。举个例子，你可以用「开始」「改变」两个state 来对内容做一些临时的改变，用「结束」state 来使「改变」成效。</p>
+<p>在进行任何操作之前，永远都要先检查 state 的值。</p>
 <hr>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><p><a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="performSelector:withObject:afterDelay 的文档">performSelector:withObject:afterDelay 的文档</a></p>
-</li>
-<li><p><a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a>（Runloop 退出时机）</p>
-</li>
-<li><p><a href="https://juejin.cn/post/6844903838550327304#heading-1" title="关于 performSelector 看我就够了">关于 performSelector 看我就够了</a>（使用场景）</p>
-</li>
-<li><p><a href="https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418867-performselector/" title="performSelector 可能导致的内存管理问题（Apple 文档）">performSelector 可能导致的内存管理问题（Apple 文档）</a></p>
-</li>
+<p>如何处理特定的手势，以下链接给出了一些例子：</p>
+<ul>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_tap_gestures?language=objc">Handling tap gestures</a>点击</li>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_long-press_gestures?language=objc">Handling long-press gestures</a>长按</li>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_pan_gestures?language=objc">Handling pan gestures</a>平移（各个方向）</li>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_swipe_gestures?language=objc">Handling swipe gestures</a>滑动（单个方向）</li>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_pinch_gestures?language=objc">Handling pinch gestures</a>捏合</li>
+<li><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/handling_uikit_gestures/handling_rotation_gestures?language=objc">Handling rotation gestures</a>旋转</li>
 </ul>
+<p>如果要了解更多有关 Gesture  Recognizer state相关信息以及它们如何影响你的代码，请看<a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer?language=objc">实现一个自定义的手势识别器</a>。</p>
+<blockquote>
+<p>总结：本文介绍了 Gesture Recognizer 的工作模式、有哪两种 Gesture Recognizer 、 如何配置Gesture Recognizer 以及 Gesture Recognizer 的 state 属性。</p>
+</blockquote>
 
                 
               </div>
@@ -364,13 +326,6 @@ if([self respondsToSelector:@selector(test)]) &#123;
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E9%9D%A2%E8%AF%95/" class="print-no-link">#面试</a>
-      
-    </div>
-  
 </div>
 
 
@@ -379,8 +334,8 @@ if([self respondsToSelector:@selector(test)]) &#123;
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>performSelector 详解——从 What 到 When</div>
-      <div>http://example.com/2022/05/01/performSelector 详解——从 What 到 When/</div>
+      <div>【翻译】Handling UIKit gestures 处理 UIkit 的 gesture</div>
+      <div>http://example.com/2023/09/03/[翻译]Handling UIKit gestures 处理 UIkit 的 gesture/</div>
     </div>
     <div class="license-meta">
       
@@ -392,7 +347,7 @@ if([self respondsToSelector:@selector(test)]) &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年5月1日</div>
+          <div>2023年9月3日</div>
         </div>
       
       
@@ -424,15 +379,21 @@ if([self respondsToSelector:@selector(test)]) &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" title="跨端框架Hummer 是如何渲染的？（iOS 版)">
+                      <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" title="【翻译】Implementing a custom gesture recognizer实现自定义的手势识别器">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
+                        <span class="hidden-mobile">【翻译】Implementing a custom gesture recognizer实现自定义的手势识别器</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2023/09/03/GestureRecognizer/" title="为了研究手势识别器，我一口气翻译了四篇文档">
+                        <span class="hidden-mobile">为了研究手势识别器，我一口气翻译了四篇文档</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

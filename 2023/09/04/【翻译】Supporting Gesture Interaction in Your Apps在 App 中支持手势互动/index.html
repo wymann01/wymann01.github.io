@@ -16,22 +16,21 @@
   <meta name="author" content="淮">
   <meta name="keywords" content="">
   
-    <meta name="description" content="缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方">
+    <meta name="description" content="概述手势互动是iOS 平台最直观的用户体验之一，以及Gesture Recognizer提供了简单的方法去实现它。iOS 定义了一些标准手势，同时提供了对应的Gesture Recognizer。你也可以自定义Gesture Recognizer来处理非标准的手势。本文的代码示例工程叫 pieces（片），用标准的Gesture Recognizer，为三个彩色 View 添加平移、缩放和旋转支持">
 <meta property="og:type" content="article">
-<meta property="og:title" content="performSelector 详解——从 What 到 When">
-<meta property="og:url" content="http://example.com/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/index.html">
+<meta property="og:title" content="【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动">
+<meta property="og:url" content="http://example.com/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
-<meta property="og:description" content="缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方">
+<meta property="og:description" content="概述手势互动是iOS 平台最直观的用户体验之一，以及Gesture Recognizer提供了简单的方法去实现它。iOS 定义了一些标准手势，同时提供了对应的Gesture Recognizer。你也可以自定义Gesture Recognizer来处理非标准的手势。本文的代码示例工程叫 pieces（片），用标准的Gesture Recognizer，为三个彩色 View 添加平移、缩放和旋转支持">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-01T14:55:14.000Z">
-<meta property="article:modified_time" content="2022-09-12T07:54:39.911Z">
+<meta property="article:published_time" content="2023-09-04T00:56:40.000Z">
+<meta property="article:modified_time" content="2023-09-04T00:58:09.674Z">
 <meta property="article:author" content="淮">
-<meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>performSelector 详解——从 What 到 When - 湖中焉得更有此人</title>
+  <title>【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动 - 湖中焉得更有此人</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="performSelector 详解——从 What 到 When"></span>
+            <span id="subtitle" data-typed-text="【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动"></span>
           
         </div>
 
@@ -208,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-05-01 22:55" pubdate>
-          2022年5月1日 晚上
+        <time datetime="2023-09-04 08:56" pubdate>
+          2023年9月4日 早上
         </time>
       </span>
     
@@ -220,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.5k 字
         
       </span>
     
@@ -268,93 +267,84 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">performSelector 详解——从 What 到 When</h1>
+            <h1 id="seo-header">【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>我最近被一位面试官问：</p>
-<ul>
-<li><p><code>performSelector</code> 是我们常用的方法，能不能从 <code>runloop</code> 的角度说说？</p>
-</li>
-<li><p><code>performSelector</code> 跟我们直接调用一个方法有什么区别？</p>
-</li>
-</ul>
-<p>一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连<code>performSelector</code> 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！</p>
-<h2 id="performSelector-是我们常用的方法，能不能从-runloop-的角度说说？"><a href="#performSelector-是我们常用的方法，能不能从-runloop-的角度说说？" class="headerlink" title="performSelector 是我们常用的方法，能不能从 runloop 的角度说说？"></a>performSelector 是我们常用的方法，能不能从 runloop 的角度说说？</h2><blockquote>
-<p>这个方法的入参是一个 selector，selector 属于 SEL类型，用来代表一个函数，实际上是一个 C 的 string。打印一个 selector 会得到对应方法的名字。详见<a href="https://developer.apple.com/documentation/objectivec/sel" title="官方文档">官方文档</a>。</p>
-</blockquote>
-<p>这里他要问的其实是<code>performSelector:withObject:afterDelay</code> 方法（Apple文档在<a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="这里">这里</a>），只有这个才跟 runloop 有关系。这个方法会生成一个定时器Timer，并把它添加到当前线程的 Runloop 上，到了预定时间后 Runloop 好去执行对应的 selector （即执行方法）。</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">
-+(void)performSelectorInMainThread &#123;
-    dispatch_async(dispatch_get_main_queue(), ^&#123;
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-    &#125;);
-&#125;
+                <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>手势互动是iOS 平台最直观的用户体验之一，以及Gesture Recognizer提供了简单的方法去实现它。iOS 定义了一些<a href="https://developer.apple.com/design/human-interface-guidelines/ios/user-interaction/gestures/">标准手势</a>，同时提供了对应的Gesture Recognizer。你也可以自定义Gesture Recognizer来处理非标准的手势。本文的代码示例工程叫 pieces（片），用标准的Gesture Recognizer，为三个彩色 View 添加平移、缩放和旋转支持，以及如何实现一个自定义的Gesture Recognizer，将 pieces重置为初始状态。</p>
+<h1 id="设置一个Gesture-Recognizer"><a href="#设置一个Gesture-Recognizer" class="headerlink" title="设置一个Gesture Recognizer"></a><strong>设置一个Gesture Recognizer</strong></h1><p>创建一个Gesture Recognizer，调用<a href="https://developer.apple.com/documentation/uikit/uiview/1622496-addgesturerecognizer?language=objc"><code>addGestureRecognizer:</code></a>添加到view 上</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">let</span> resetGestureRecognizer <span class="hljs-operator">=</span> <span class="hljs-type">ResetGestureRecognizer</span>(target: <span class="hljs-keyword">self</span>, action: <span class="hljs-keyword">#selector</span>(resetPieces(<span class="hljs-keyword">_</span>:)))
+view.addGestureRecognizer(resetGestureRecognizer)</code></pre></div>
 
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
-&#125;</code></pre></div>
-
-<p>注意：如果是在<strong>子线程</strong>中调用performSelector:withObject:afterDelay 方法，那就得手动获取一下 runloop，同时得让子线程中的 runloop 处于 run 状态。<strong>因为子线程中的 Runloop 不是默认创建，更不会默认 Run 起来。</strong></p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">+(void)performSelectorInOtherThread &#123;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;
-        NSLog(@&quot;1&quot;);
-        NSRunLoop *runloop = [NSRunLoop currentRunLoop]; // 注释这句,则不会执行 test 方法
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-        [runloop run];// 注释这句,也不会执行 test 方法； 
-        //同时，这句需要放在 performSelector 后面，对应的 timer 才会被添加到 Runloop 中
-        NSLog(@&quot;3&quot;);
-    &#125;);
-&#125;
-
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
-&#125;</code></pre></div>
-
+<p>Xcode中有UIKit 的标准Gesture Recognizer，开发者可以在storyboard中使用它们。在storyboard使用Gesture Recognizer：</p>
+<ol>
+<li>打开storyboard</li>
+<li>在 Xcode的 Object Library 中找到Gesture Recognizer</li>
+<li>拖到 View 上</li>
+</ol>
 <blockquote>
-<p>这里其实也可以引申两个问题：<br>1. 如何查看Runloop 拥有的「源」？<br>2. Runloop 在什么时候会退出？（在本示例代码中，“3”是在 Runloop退出的时候打印的，那 Runloop 怎么为啥会退出？）<br>想了解详情，请看<a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a></p>
+<p>这么简单也要说？</p>
 </blockquote>
-<h2 id="performSelector-跟我们直接调用一个方法有什么区别？"><a href="#performSelector-跟我们直接调用一个方法有什么区别？" class="headerlink" title="performSelector 跟我们直接调用一个方法有什么区别？"></a>performSelector 跟我们直接调用一个方法有什么区别？</h2><p><code>performSelector</code>是运行时决议的，用<code>performSelector</code> 可以到运行时才决定要执行哪个方法，因此编译器不会检查 <code>performSelector</code>的入参所代表的<strong>方法</strong>是否已经被 <code>caller</code> 对象实现。（因此，这时你可以在「不 import 头文件」的情况下调用方法）</p>
-<p>而对于一般的方法调用，编译器会严格把控当前 caller 是否实现了该方法，如果没有，根本过不了编译。</p>
-<p>这就类似于 Java 语言中的「反射」机制。</p>
-<h2 id="performSelector-的使用"><a href="#performSelector-的使用" class="headerlink" title="performSelector 的使用"></a>performSelector 的使用</h2><p>因为对应的 selector 有可能实现，也可能没实现，所以它尝尝跟<code>respondsToSelector:</code> 搭配使用，如下代码：</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 检查 self 对象是否实现了 test 方法
-if([self respondsToSelector:@selector(test)]) &#123;
-    [self performSelector:@selector(test)];
-&#125;</code></pre></div>
-
-<p>另外，根据 Apple 的文档描述，performSelector 可能会带来内存管理问题：</p>
-<blockquote>
-<p>But use caution when doing this. Different messages require different memory management strategies for their returned objects, and it might not be obvious which to use.<br>Usually the caller isn’t responsible for the memory of a returned object, but that’s not true when the selector is one of the creation methods, such as <a href="https://developer.apple.com/documentation/objectivec/nsobject/1418807-copy" title="copy">copy</a>. See <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html#//apple_ref/doc/uid/20000994" title="Memory Management Policy">Memory Management Policy</a> in <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i" title="Advanced Memory Management Programming Guide">Advanced Memory Management Programming Guide</a> for a description of ownership expectations. Depending on the structure of your code, it might not be clear which kind of selector you are using for any given invocation.<br>Due to this uncertainty, the compiler generates a warning if you supply a variable selector while using ARC to manage memory. Because it can’t determine ownership of the returned object at compile-time, ARC makes the assumption that the caller does <em>not</em> need to take ownership, but this may not be true. The compiler warning alerts you to the potential for a memory leak.</p>
-</blockquote>
-<p>大意是，如果提供的 selector 是构造方法，那么可能会带来所有权的不确定，进一步导致<strong>内存泄漏</strong>的问题。如果确定 selector 不会返回值，建议改用<a href="https://developer.apple.com/documentation/objectivec/nsobject/1414900-performselectoronmainthread" title="performSelectorOnMainThread:withObject:waitUntilDone:">performSelectorOnMainThread:withObject:waitUntilDone:</a> 。也可以改用 NSInvokation，构建一个可以返回值的 message（selector 可以被看做是一个 message，因为 Objective-C 调用方法的方式是「消息转发」）</p>
-<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
-<li><p>动态化和组件化</p>
-</li>
-<li><p>多线程</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 主线程
-- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array;
-
-// 子线程
-- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array
+<p>就这样，Xcode自动地把Gesture Recognizer添加到storyboard上，同时把它跟 view 联系起来。像给其他 UI 元素添加 action一样，给Gesture Recognizer用同样方法进行添加。</p>
+<h1 id="处理平移、捏合和旋转手势"><a href="#处理平移、捏合和旋转手势" class="headerlink" title="处理平移、捏合和旋转手势"></a><strong>处理平移、捏合和旋转手势</strong></h1><p>本示例代码用平移 pan、捏合pinch 和旋转手势，来移动、缩放和旋转视图。当用户平移一个 View 时，UIKit 触发相关action 函数，在本示例代码中为panPiece(<em>:)。传入一个带有偏移量（translation）的<a href="https://developer.apple.com/documentation/uikit/uipangesturerecognizer?language=objc"><code>UIPanGestureRecognizer</code></a>示例。panPiece(</em>:)会计算和移动 view 到新的位置，然后将偏移量清零，下次偏移量的值就完全是相对新位置的增量。</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">let</span> translation <span class="hljs-operator">=</span> panGestureRecognizer.translation(in: piece.superview)
+piece.center <span class="hljs-operator">=</span> <span class="hljs-type">CGPoint</span>(x: piece.center.x <span class="hljs-operator">+</span> translation.x, y: piece.center.y <span class="hljs-operator">+</span> translation.y)
+panGestureRecognizer.setTranslation(.zero, in: piece.superview)
 </code></pre></div>
-</li>
-<li><p>延后执行</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">[self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-</code></pre></div></li>
-</ul>
-<hr>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><p><a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="performSelector:withObject:afterDelay 的文档">performSelector:withObject:afterDelay 的文档</a></p>
-</li>
-<li><p><a href="https://juejin.cn/post/6844903781755256840" title="Runloop 与 performSelector">Runloop 与 performSelector</a>（Runloop 退出时机）</p>
-</li>
-<li><p><a href="https://juejin.cn/post/6844903838550327304#heading-1" title="关于 performSelector 看我就够了">关于 performSelector 看我就够了</a>（使用场景）</p>
-</li>
-<li><p><a href="https://developer.apple.com/documentation/objectivec/1418956-nsobject/1418867-performselector/" title="performSelector 可能导致的内存管理问题（Apple 文档）">performSelector 可能导致的内存管理问题（Apple 文档）</a></p>
-</li>
-</ul>
+
+<p>类似的，当用户捏合和旋转一个 View，本示例代码用UIPinchGestureRecognizer的scale 属性、UIRotationGestureRecognizer的rotation属性，来计算和应用新的变换，然后清零那些属性。</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">let</span> scale <span class="hljs-operator">=</span> pinchGestureRecognizer.scale
+piece.transform <span class="hljs-operator">=</span> piece.transform.scaledBy(x: scale, y: scale)
+pinchGestureRecognizer.scale <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-comment">// 清空 scale 属性，那么下次 scale 使用时就是正确的增量</span>
+</code></pre></div>
+
+<div class="code-wrapper"><pre><code class="hljs Swift">piece.transform <span class="hljs-operator">=</span> piece.transform.rotated(by: rotationGestureRecognizer.rotation)
+rotationGestureRecognizer.rotation <span class="hljs-operator">=</span> <span class="hljs-number">0</span> <span class="hljs-comment">// 清空 rotation 属性，下次 rotation 使用时就是正确的增量</span>
+</code></pre></div>
+
+<p>scale 和rotation属性跟这个 view.layer.<a href="https://developer.apple.com/documentation/quartzcore/calayer/1410817-anchorpoint?language=objc"><code>anchorPoint</code></a> 有关。</p>
+<blockquote>
+<p>anchorPoint：边界的锚点，view 的中心点，旋转就是围绕这个锚点进行。可以配置不同的锚点，锚点不同，旋转的效果不同。默认值是(0.5, 0.5) ，代表这个 view 的 layer 的矩形 bound 的中心。</p>
+</blockquote>
+<p>为了在缩放和旋转时更加直观，本示例将anchorPoint移动到手势的位置，而这通常是手势中包含的touch 的质心。</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">private</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">adjustAnchor</span>(<span class="hljs-params">for</span> <span class="hljs-params">gestureRecognizer</span>: <span class="hljs-type">UIGestureRecognizer</span>) &#123;
+    <span class="hljs-keyword">guard</span> <span class="hljs-keyword">let</span> piece <span class="hljs-operator">=</span> gestureRecognizer.view, gestureRecognizer.state <span class="hljs-operator">==</span> .began <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span>
+    &#125;
+    <span class="hljs-keyword">let</span> locationInPiece <span class="hljs-operator">=</span> gestureRecognizer.location(in: piece)
+    <span class="hljs-keyword">let</span> locationInSuperview <span class="hljs-operator">=</span> gestureRecognizer.location(in: piece.superview)
+    <span class="hljs-keyword">let</span> anchorX <span class="hljs-operator">=</span> locationInPiece.x <span class="hljs-operator">/</span> piece.bounds.size.width
+    <span class="hljs-keyword">let</span> anchorY <span class="hljs-operator">=</span> locationInPiece.y <span class="hljs-operator">/</span> piece.bounds.size.height
+    piece.layer.anchorPoint <span class="hljs-operator">=</span> <span class="hljs-type">CGPoint</span>(x: anchorX, y: anchorY)
+    piece.center <span class="hljs-operator">=</span> locationInSuperview
+&#125;</code></pre></div>
+
+<h1 id="允许同时识别多个手势"><a href="#允许同时识别多个手势" class="headerlink" title="允许同时识别多个手势"></a><strong>允许同时识别多个手势</strong></h1><p>用户有时候想多个手势同时工作，比如同时捏合和旋转。本示例通过实现<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerdelegate?language=objc"><code>UIGestureRecognizerDelegate</code></a>中方法允许了这种效果，也就是在shouldRecognizeSimultaneouslyWith 函数中返回 Yes，允许同时操作。</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">func</span> <span class="hljs-title function_">gestureRecognizer</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">gestureRecognizer</span>: <span class="hljs-type">UIGestureRecognizer</span>,
+                       <span class="hljs-params">shouldRecognizeSimultaneouslyWith</span> <span class="hljs-params">otherGestureRecognizer</span>: <span class="hljs-type">UIGestureRecognizer</span>) -&gt; <span class="hljs-type">Bool</span> &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+&#125;</code></pre></div>
+
+<p>为了让 delegate 方法生效，本示例将Gesture Recognizer的 delegate 置为self，也就是实现方法的view controller</p>
+<div class="code-wrapper"><pre><code class="hljs Swift">resetGestureRecognizer.delegate <span class="hljs-operator">=</span> <span class="hljs-keyword">self</span>
+</code></pre></div>
+
+<p>对于在storyboard中的Gesture Recognizer，通过拖拽来设置它们的delegate。</p>
+<p>UIGestureRecognizerDelegate 提供了控制「手势识别」顺序的方法，想了解更多有关手势识别顺序的，请看「优先考虑某个手势<a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/coordinating_multiple_gesture_recognizers/preferring_one_gesture_over_another?language=objc">Preferring one gesture over another</a>.」</p>
+<h1 id="创建自定义的Gesture-Recognizer"><a href="#创建自定义的Gesture-Recognizer" class="headerlink" title="创建自定义的Gesture Recognizer"></a><strong>创建自定义的Gesture Recognizer</strong></h1><p>本示例创建了一个自定义的Gesture Recognizer—— <code>ResetGestureRecognizer</code>，识别的是包含至少三个水平转弯的手势。用户可以用它来初始化视图。怎么做呢？将view从初始位置上挪走，然后把一根手指放到没有彩色 view 覆盖的地方，左右来回划动，好像在屏幕上甩动你的手指。</p>
+<blockquote>
+<p>其实更形象的说法是手指在水平方向上折返跑。</p>
+</blockquote>
+<p>为了识别这个手势，本示例在<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer/1620009-touchesbegan"><code>touchesBegan(_:with:)</code></a>抓起合法的 touch，在<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer/1619996-touchesmoved"><code>touchesMoved(_:with:)</code></a>中收集 touch 的位置。当用户抬起手指，触发<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizer/1620005-touchesended"><code>touchesEnded(_:with:)</code></a>，本示例开始数触摸路径上有多少次转弯，如果路径上有两个以上的转弯，将 state 设置为 .ended，识别出这个手势来。</p>
+<div class="code-wrapper"><pre><code class="hljs Swift"><span class="hljs-keyword">let</span> count <span class="hljs-operator">=</span> countHorizontalTurning(touchedPoints: touchedPoints)
+state <span class="hljs-operator">=</span> count <span class="hljs-operator">&gt;</span> <span class="hljs-number">2</span> <span class="hljs-operator">?</span> .ended : .failed</code></pre></div>
+
+<p>注意，本示例没有进一步消除位置误差或者检查它们的距离来验证，在真实世界里，这些措施是要考虑执行的，从而提高识别精确度和避免识别错误。</p>
+<p>更多有关自定义Gesture Recognizer的细节，请读「实现一个自定义Gesture Recognizer <a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer">Implementing a custom gesture recognizer</a>. 」</p>
+<blockquote>
+<p>总结：介绍了如何允许多个手势同时工作，如何处理标准手势、以及如何通过自定义Gesture Recognizer处理非标准手势。</p>
+</blockquote>
 
                 
               </div>
@@ -364,13 +354,6 @@ if([self respondsToSelector:@selector(test)]) &#123;
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E9%9D%A2%E8%AF%95/" class="print-no-link">#面试</a>
-      
-    </div>
-  
 </div>
 
 
@@ -379,8 +362,8 @@ if([self respondsToSelector:@selector(test)]) &#123;
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>performSelector 详解——从 What 到 When</div>
-      <div>http://example.com/2022/05/01/performSelector 详解——从 What 到 When/</div>
+      <div>【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动</div>
+      <div>http://example.com/2023/09/04/【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动/</div>
     </div>
     <div class="license-meta">
       
@@ -392,7 +375,7 @@ if([self respondsToSelector:@selector(test)]) &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年5月1日</div>
+          <div>2023年9月4日</div>
         </div>
       
       
@@ -424,15 +407,15 @@ if([self respondsToSelector:@selector(test)]) &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" title="跨端框架Hummer 是如何渲染的？（iOS 版)">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">跨端框架Hummer 是如何渲染的？（iOS 版)</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/" title="【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机">
+                        <span class="hidden-mobile">【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

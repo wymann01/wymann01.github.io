@@ -1,31 +1,28 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
-    <!-- title -->
-
-
-    
-
-<!-- keywords -->
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="淮">
-    <meta name="renderer" content="webkit">
-    <meta name="copyright" content="淮">
-    
-        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
-    
-    <meta name="description" content="">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="淮">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="UIPickerView 如何修改选中行的样式 本文会介绍两个我在使用 UIPickerView 时遇到的问题, 最后给出它们的解决方法：  如何无延迟地更新选中行的样式？ 如何修改选中行的背景颜色？  选中行的样式需求中，要求更改选中行的字体颜色和字重，加粗+变色。我一开始尝试在「选中回调函数pickerView:didSelectRow:inComponent: 」 这个回调函数中，获取当前选">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UIPickerView 如何修改选中行的样式?">
 <meta property="og:url" content="http://example.com/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
 <meta property="og:description" content="UIPickerView 如何修改选中行的样式 本文会介绍两个我在使用 UIPickerView 时遇到的问题, 最后给出它们的解决方法：  如何无延迟地更新选中行的样式？ 如何修改选中行的背景颜色？  选中行的样式需求中，要求更改选中行的字体颜色和字重，加粗+变色。我一开始尝试在「选中回调函数pickerView:didSelectRow:inComponent: 」 这个回调函数中，获取当前选">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/image/UIPickerView/UIPickerView.png">
 <meta property="og:image" content="http://example.com/image/UIPickerView/NotSelected.gif">
 <meta property="og:image" content="http://example.com/image/UIPickerView/SelectedEffect.gif">
@@ -34,489 +31,279 @@
 <meta property="og:image" content="http://example.com/image/UIPickerView/Solved.png">
 <meta property="og:image" content="http://example.com/image/UIPickerView/PinDuoDuo.gif">
 <meta property="article:published_time" content="2023-08-29T08:48:28.000Z">
-<meta property="article:modified_time" content="2023-08-29T09:32:00.903Z">
+<meta property="article:modified_time" content="2023-09-02T05:16:26.130Z">
 <meta property="article:author" content="淮">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/image/UIPickerView/UIPickerView.png">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="icon" href="/assets/favicon.ico">
-    
-    <title>UIPickerView 如何修改选中行的样式? · 光的博客</title>
-    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-/* This file is meant as a standalone workflow for
-- testing support for link[rel=preload]
-- enabling async CSS loading in browsers that do not support rel=preload
-- applying rel preload css once loaded, whether supported or not.
-*/ -->
-<script>
-    (function (w) {
-        'use strict'
-        // rel=preload support test
-        if (!w.loadCSS) {
-            w.loadCSS = function () {}
-        }
-        // define on the loadCSS obj
-        var rp = (loadCSS.relpreload = {})
-        // rel=preload feature support test
-        // runs once and returns a function for compat purposes
-        rp.support = (function () {
-            var ret
-            try {
-                ret = w.document.createElement('link').relList.supports('preload')
-            } catch (e) {
-                ret = false
-            }
-            return function () {
-                return ret
-            }
-        })()
+  
+  
+  
+  <title>UIPickerView 如何修改选中行的样式? - 湖中焉得更有此人</title>
 
-        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
-        // then change that media back to its intended value on load
-        rp.bindMediaToggle = function (link) {
-            // remember existing media attr for ultimate state, or default to 'all'
-            var finalMedia = link.media || 'all'
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
-            function enableStylesheet() {
-                link.media = finalMedia
-            }
 
-            // bind load handlers to enable media
-            if (link.addEventListener) {
-                link.addEventListener('load', enableStylesheet)
-            } else if (link.attachEvent) {
-                link.attachEvent('onload', enableStylesheet)
-            }
 
-            // Set rel and non-applicable media type to start an async request
-            // note: timeout allows this to happen async to let rendering continue in IE
-            setTimeout(function () {
-                link.rel = 'stylesheet'
-                link.media = 'only x'
-            })
-            // also enable media after 3 seconds,
-            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
-            setTimeout(enableStylesheet, 3000)
-        }
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-        // loop through link elements in DOM
-        rp.poly = function () {
-            // double check this to prevent external calls from running
-            if (rp.support()) {
-                return
-            }
-            var links = w.document.getElementsByTagName('link')
-            for (var i = 0; i < links.length; i++) {
-                var link = links[i]
-                // qualify links to those with rel=preload and as=style attrs
-                if (
-                    link.rel === 'preload' &&
-                    link.getAttribute('as') === 'style' &&
-                    !link.getAttribute('data-loadcss')
-                ) {
-                    // prevent rerunning on link
-                    link.setAttribute('data-loadcss', true)
-                    // bind listeners to toggle media back
-                    rp.bindMediaToggle(link)
-                }
-            }
-        }
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
-        // if unsupported, run the polyfill
-        if (!rp.support()) {
-            // run once at least
-            rp.poly()
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
-            // rerun poly on an interval until onload
-            var run = w.setInterval(rp.poly, 500)
-            if (w.addEventListener) {
-                w.addEventListener('load', function () {
-                    rp.poly()
-                    w.clearInterval(run)
-                })
-            } else if (w.attachEvent) {
-                w.attachEvent('onload', function () {
-                    rp.poly()
-                    w.clearInterval(run)
-                })
-            }
-        }
 
-        // commonjs
-        if (typeof exports !== 'undefined') {
-            exports.loadCSS = loadCSS
-        } else {
-            w.loadCSS = loadCSS
-        }
-    })(typeof global !== 'undefined' ? global : this)
-</script>
 
-    <style type="text/css">
-    @font-face {
-        font-family: 'Oswald-Regular';
-        src: url("/font/Oswald-Regular.ttf");
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
 
-    body {
-        margin: 0;
-    }
 
-    header,
-    footer,
-    .back-top,
-    .sidebar,
-    .container,
-    .site-intro-meta,
-    .toc-wrapper {
-        display: none;
-    }
-
-    .site-intro {
-        position: relative;
-        z-index: 3;
-        width: 100%;
-        /* height: 50vh; */
-        overflow: hidden;
-    }
-
-    .site-intro-placeholder {
-        position: absolute;
-        z-index: -2;
-        top: 0;
-        left: 0;
-        width: calc(100% + 300px);
-        height: 100%;
-        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
-        background-position: center center;
-        transform: translate3d(-226px, 0, 0);
-        animation: gradient-move 2.5s ease-out 0s infinite;
-    }
-
-    @keyframes gradient-move {
-        0% {
-            transform: translate3d(-226px, 0, 0);
-        }
-        100% {
-            transform: translate3d(0, 0, 0);
-        }
-    }
-</style>
-
-    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
-    <link rel="stylesheet" href="/css/dark.css">
-    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
-    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
-    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
-    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
-    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
-    <!-- algolia -->
-    
-    <!-- 百度统计  -->
-    
-    <!-- 谷歌统计  -->
-    
+  
 <meta name="generator" content="Hexo 6.1.0"></head>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        if (typeof window.$ == undefined) {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js" />')
-        }
-    </script>
+
+<body>
+  
+
+  <header>
     
-        <body class="post-body">
-    
-        <!-- header -->
-        <header class="header header-mobile">
-    <!-- top read progress line -->
-    <div class="header-element">
-        <div class="read-progress"></div>
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
-    <!-- sidebar menu button -->
-    <div class="header-element">
-        
-            <div class="header-sidebar-menu">
-        
-            
-                <div style="padding-left: 1px;">&#xe775;</div>
-            
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="UIPickerView 如何修改选中行的样式?"></span>
+          
         </div>
-    </div>
-    <!-- header actions -->
-    <div class="header-actions">
-        <!-- theme mode switch button -->
-        <span class="header-theme-btn header-element">
-            <i class="fas fa-adjust"></i>
-        </span>
-        <!-- back to home page text -->
-        <span class="home-link header-element">
-            <a href=/>光的博客</a>
-        </span>
-    </div>
-    <!-- toggle banner for post layout -->
+
+        
+          
+  <div class="mt-3">
     
-        
-            <div class="banner">
-        
-            <div class="blog-title header-element">
-                <a href="/">光的博客</a>
-            </div>
-            <div class="post-title header-element">
-                <a href="#" class="post-name">UIPickerView 如何修改选中行的样式?</a>
-            </div>
-        </div>
     
-</header>
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-29 16:48" pubdate>
+          2023年8月29日 下午
+        </time>
+      </span>
+    
+  </div>
 
-        <!-- fixed footer -->
-        <footer class="footer-fixed">
-    <!-- back to top button -->
-    <div class="footer-fixed-element">
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
         
-            <div class="back-top back-top-hidden">
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
         
         
-            <div>&#xe639;</div>
         
-        </div>
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
     </div>
-</footer>
-
-        <!-- wrapper -->
-        <div class="wrapper">
-            <div class="site-intro" style="
-
-
-
-
-
-
-
-    height:50vh;
-
-">
-    
-    <!-- 主页  -->
-    
-        
-    <!-- 404页  -->
-            
-    <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
-    <div class="site-intro-meta">
-        <!-- 标题  -->
-        <h1 class="intro-title">
-            <!-- 主页  -->
-            
-                UIPickerView 如何修改选中行的样式?
-            <!-- 404 -->
-            
-        </h1>
-        <!-- 副标题 -->
-        <p class="intro-subtitle">
-            <!-- 主页副标题  -->
-            
-                
-            <!-- 404 -->
-            
-        </p>
-        <!-- 文章页 meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                
-                    <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">1.3k</span>Reading time: <span class="post-count reading-time">5 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <!-- 撰写日期 -->
-                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/08/29</span>
-                    <!-- busuanzi -->
-                    
-                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
-                            <span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    
-                    <!-- 文章分享 -->
-                    <span class="share-wrapper">
-                        <span class="iconfont-archer share-icon">&#xe71d;</span>
-                        <span class="share-text">Share</span>
-                        <ul class="share-list">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
-        
-    </div>
+  </div>
 </div>
 
-            <script>
-  // get user agent
-  function getBrowserVersions() {
-    var u = window.navigator.userAgent
-    return {
-      userAgent: u,
-      trident: u.indexOf('Trident') > -1, //IE内核
-      presto: u.indexOf('Presto') > -1, //opera内核
-      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-      iPad: u.indexOf('iPad') > -1, //是否为iPad
-      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
-    }
-  }
-  var browser = {
-    versions: getBrowserVersions(),
-  }
-  console.log('userAgent: ' + browser.versions.userAgent)
+</div>
 
-  // callback
-  function fontLoaded() {
-    console.log('font loaded')
-    if (document.getElementsByClassName('site-intro-meta')) {
-      document
-        .getElementsByClassName('intro-title')[0]
-        .classList.add('intro-fade-in')
-      document
-        .getElementsByClassName('intro-subtitle')[0]
-        .classList.add('intro-fade-in')
-      var postIntros = document.getElementsByClassName('post-intros')[0]
-      if (postIntros) {
-        postIntros.classList.add('post-fade-in')
-      }
-    }
-  }
+  </header>
 
-  // UC不支持跨域，所以直接显示
-  function asyncCb() {
-    if (browser.versions.uc) {
-      console.log('UCBrowser')
-      fontLoaded()
-    } else {
-      WebFont.load({
-        custom: {
-          families: ['Oswald-Regular'],
-        },
-        loading: function () {
-          // 所有字体开始加载
-          // console.log('font loading');
-        },
-        active: function () {
-          // 所有字体已渲染
-          fontLoaded()
-        },
-        inactive: function () {
-          // 字体预加载失败，无效字体或浏览器不支持加载
-          console.log('inactive: timeout')
-          fontLoaded()
-        },
-        timeout: 5000, // Set the timeout to two seconds
-      })
-    }
-  }
+  <main>
+    
+      
 
-  function asyncErr() {
-    console.warn('script load from CDN failed, will load local script')
-  }
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
 
-  // load webfont-loader async, and add callback function
-  function async(u, cb, err) {
-    var d = document,
-      t = 'script',
-      o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0]
-    o.src = u
-    if (cb) {
-      o.addEventListener(
-        'load',
-        function (e) {
-          cb(null, e)
-        },
-        false
-      )
-    }
-    if (err) {
-      o.addEventListener(
-        'error',
-        function (e) {
-          err(null, e)
-        },
-        false
-      )
-    }
-    s.parentNode.insertBefore(o, s)
-  }
+    </div>
 
-  var asyncLoadWithFallBack = function (arr, success, reject) {
-    var currReject = function () {
-      reject()
-      arr.shift()
-      if (arr.length) async(arr[0], success, currReject)
-    }
-
-    async(arr[0], success, currReject)
-  }
-
-  asyncLoadWithFallBack(
-    [
-      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
-      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
-      "/lib/webfontloader.min.js",
-    ],
-    asyncCb,
-    asyncErr
-  )
-</script>
-
-            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
-            <div class="container container-unloaded">
-                <main class="main post-page">
-    <article class="article-entry">
-        <h1 id="UIPickerView-如何修改选中行的样式"><a href="#UIPickerView-如何修改选中行的样式" class="headerlink" title="UIPickerView 如何修改选中行的样式"></a>UIPickerView 如何修改选中行的样式</h1><p><img src="/../image/UIPickerView/UIPickerView.png"></p>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">UIPickerView 如何修改选中行的样式?</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="UIPickerView-如何修改选中行的样式"><a href="#UIPickerView-如何修改选中行的样式" class="headerlink" title="UIPickerView 如何修改选中行的样式"></a>UIPickerView 如何修改选中行的样式</h1><p><img src="/../image/UIPickerView/UIPickerView.png" srcset="/img/loading.gif" lazyload></p>
 <p>本文会介绍两个我在使用 UIPickerView 时遇到的问题, 最后给出它们的解决方法：</p>
 <ol>
 <li>如何<strong>无延迟</strong>地更新选中行的样式？</li>
 <li>如何修改选中行的背景颜色？</li>
 </ol>
 <h2 id="选中行的样式"><a href="#选中行的样式" class="headerlink" title="选中行的样式"></a>选中行的样式</h2><p>需求中，要求更改选中行的字体颜色和字重，加粗+变色。我一开始尝试在「选中回调函数pickerView:didSelectRow:inComponent: 」 这个回调函数中，获取当前选中的 view，然后修改它的样式，但是这样的效果不够丝滑，需要松开手、有大约 0.5s 的延迟，才会看到选中效果</p>
-<p><img src="/../image/UIPickerView/NotSelected.gif"></p>
+<p><img src="/../image/UIPickerView/NotSelected.gif" srcset="/img/loading.gif" lazyload></p>
 <p>同时还有一个问题，就是在用户还没有开始滚动选择之初，当前选中行是没有「选中效果」的。哪怕手动调用</p>
 <p>selectRow:inComponent:animated: 函数，pickerView也滑到了指定行，也不会触发pickerView:didSelectRow:inComponent: 这个回调。</p>
 <blockquote>
 <p>这个问题其实我还没研究清楚为啥，期待有知道的大佬指点一下迷津</p>
 </blockquote>
 <p>于是我去github 上看看有没有人解决了这个问题，找到了一个 star 数有2k+的<a href="https://github.com/91renb/BRPickerView" title="BRPickerView">BRPickerView</a>，人家的选中效果就很丝滑，翻了翻代码，发现ta 是在pickerView:viewForRow:forComponent:reusingView: 中设置当前选中行的样式，如下：</p>
-<pre><code class="objective-c">- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view &#123;
-    // 设置选中行字体颜色和字体大小
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;
-        UILabel *label = (UILabel *)[pickerView viewForRow:row forComponent:component];
-        label.textColor = UIColor.blueColor;
-        [label setFont:[UIFont systemFontOfSize:20 weight:20]];
+<div class="code-wrapper"><pre><code class="hljs objc">- (<span class="hljs-built_in">UIView</span> *)pickerView:(<span class="hljs-built_in">UIPickerView</span> *)pickerView viewForRow:(<span class="hljs-built_in">NSInteger</span>)row forComponent:(<span class="hljs-built_in">NSInteger</span>)component reusingView:(<span class="hljs-built_in">UIView</span> *)view &#123;
+    <span class="hljs-comment">// 设置选中行字体颜色和字体大小</span>
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="hljs-number">0</span> * <span class="hljs-built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;
+        <span class="hljs-built_in">UILabel</span> *label = (<span class="hljs-built_in">UILabel</span> *)[pickerView viewForRow:row forComponent:component];
+        label.textColor = <span class="hljs-built_in">UIColor</span>.blueColor;
+        [label setFont:[<span class="hljs-built_in">UIFont</span> systemFontOfSize:<span class="hljs-number">20</span> weight:<span class="hljs-number">20</span>]];
     &#125;);
   &#125;
-&#125;
-</code></pre>
+&#125;</code></pre></div>
+
 <p>但是为什么要放在<strong>dispatch_after</strong> 里立即执行，这个暂时也不太清楚，我自己动手测试，不包这一层不影响效果，猜测是包了这一层后能够保证其中的代码能够立刻在主队列执行，同时避免发生子线程修改 UI而 crash的情况。</p>
 <p>看了下<strong>pickerView:viewForRow:forComponent:reusingView:</strong> 的文档，</p>
 <blockquote>
@@ -526,420 +313,401 @@
 </blockquote>
 <hr>
 <p><strong>anyway，把修改样式的代码放到pickerView:viewForRow:forComponent:reusingView:后，不仅丝滑了很多，而且在初始、用户未滚动的时候也能保证有选中效果，成功实现需求。</strong></p>
-<p><img src="/../image/UIPickerView/SelectedEffect.gif"></p>
+<p><img src="/../image/UIPickerView/SelectedEffect.gif" srcset="/img/loading.gif" lazyload></p>
 <h2 id="修改选中行的背景颜色"><a href="#修改选中行的背景颜色" class="headerlink" title="修改选中行的背景颜色"></a>修改选中行的背景颜色</h2><p>还有一个常见的需求就是修改选中行的背景颜色，如上图，选中行的 View 我们可以通过 <strong>[pickerView viewForRow:row forComponent:component]</strong> 这样的代码获取，但是有问题, 如果给这个 View 设置背景颜色，前面会留有空隙，如图：</p>
-<p><img src="/../image/UIPickerView/gap.png"></p>
+<p><img src="/../image/UIPickerView/gap.png" srcset="/img/loading.gif" lazyload></p>
 <p>这办法还不行，得找到外部的容器，修改它的背景颜色才行。在 BRPickerView 中找到的方法如下：</p>
-<pre><code class="objective-c">// 设置选中行背景色
-    // 1. 获取 pickerView 的子 View（有多个），取第一个 view，称之为 contentView
-    UIView *contentView = nil;
-    NSArray *subviews = pickerView.subviews;
-    if (subviews.count &gt; 0) &#123;
-        id firstObj = subviews.firstObject;
-        if (firstObj &amp;&amp; [firstObj isKindOfClass:[UIView class]]) &#123;
-            contentView = (UIView *)firstObj;
+<div class="code-wrapper"><pre><code class="hljs objc"><span class="hljs-comment">// 设置选中行背景色</span>
+    <span class="hljs-comment">// 1. 获取 pickerView 的子 View（有多个），取第一个 view，称之为 contentView</span>
+    <span class="hljs-built_in">UIView</span> *contentView = <span class="hljs-literal">nil</span>;
+    <span class="hljs-built_in">NSArray</span> *subviews = pickerView.subviews;
+    <span class="hljs-keyword">if</span> (subviews.count &gt; <span class="hljs-number">0</span>) &#123;
+        <span class="hljs-type">id</span> firstObj = subviews.firstObject;
+        <span class="hljs-keyword">if</span> (firstObj &amp;&amp; [firstObj isKindOfClass:[<span class="hljs-built_in">UIView</span> <span class="hljs-keyword">class</span>]]) &#123;
+            contentView = (<span class="hljs-built_in">UIView</span> *)firstObj;
         &#125;
     &#125;
     
-    // 2. 在 contentView 中通过 KVC 取它的 subviewCache 属性，称为 columnView
-    UIView *columnView = nil;
-    if (contentView) &#123;
-        id obj = [contentView valueForKey:@&quot;subviewCache&quot;];
-        if (obj &amp;&amp; [obj isKindOfClass:[NSArray class]]) &#123;
-            NSArray *columnViewArray = (NSArray *)obj;
-            if (columnViewArray.count &gt; 0) &#123;
-                id columnObj = columnViewArray.firstObject;
-                if (columnObj &amp;&amp; [columnObj isKindOfClass:[UIView class]]) &#123;
-                    columnView = (UIView *)columnObj;
+    <span class="hljs-comment">// 2. 在 contentView 中通过 KVC 取它的 subviewCache 属性，称为 columnView</span>
+    <span class="hljs-built_in">UIView</span> *columnView = <span class="hljs-literal">nil</span>;
+    <span class="hljs-keyword">if</span> (contentView) &#123;
+        <span class="hljs-type">id</span> obj = [contentView valueForKey:<span class="hljs-string">@&quot;subviewCache&quot;</span>];
+        <span class="hljs-keyword">if</span> (obj &amp;&amp; [obj isKindOfClass:[<span class="hljs-built_in">NSArray</span> <span class="hljs-keyword">class</span>]]) &#123;
+            <span class="hljs-built_in">NSArray</span> *columnViewArray = (<span class="hljs-built_in">NSArray</span> *)obj;
+            <span class="hljs-keyword">if</span> (columnViewArray.count &gt; <span class="hljs-number">0</span>) &#123;
+                <span class="hljs-type">id</span> columnObj = columnViewArray.firstObject;
+                <span class="hljs-keyword">if</span> (columnObj &amp;&amp; [columnObj isKindOfClass:[<span class="hljs-built_in">UIView</span> <span class="hljs-keyword">class</span>]]) &#123;
+                    columnView = (<span class="hljs-built_in">UIView</span> *)columnObj;
                 &#125;
             &#125;
         &#125;
     &#125;
     
-    // 2.还用 KVC，取 columnView 的 middleContainerView，修改它的背景颜色即可
-    if (columnView) &#123;
-        id containerObj = [columnView valueForKey:@&quot;middleContainerView&quot;];
-        if (containerObj &amp;&amp; [containerObj isKindOfClass:[UIView class]]) &#123;
-            UIView *selectedRowViewContainer = (UIView *)containerObj;
-            // 最终设置背景框的颜色
-            selectedRowViewContainer.backgroundColor = UIColor.blackColor;
+    <span class="hljs-comment">// 2.还用 KVC，取 columnView 的 middleContainerView，修改它的背景颜色即可</span>
+    <span class="hljs-keyword">if</span> (columnView) &#123;
+        <span class="hljs-type">id</span> containerObj = [columnView valueForKey:<span class="hljs-string">@&quot;middleContainerView&quot;</span>];
+        <span class="hljs-keyword">if</span> (containerObj &amp;&amp; [containerObj isKindOfClass:[<span class="hljs-built_in">UIView</span> <span class="hljs-keyword">class</span>]]) &#123;
+            <span class="hljs-built_in">UIView</span> *selectedRowViewContainer = (<span class="hljs-built_in">UIView</span> *)containerObj;
+            <span class="hljs-comment">// 最终设置背景框的颜色</span>
+            selectedRowViewContainer.backgroundColor = <span class="hljs-built_in">UIColor</span>.blackColor;
         &#125;
-    &#125;
-</code></pre>
+    &#125;</code></pre></div>
+
 <p>到这里我不禁想为什么 Apple 的设计思路这么古怪，这么一个常用的属性为什么不暴露给开发者呢，就叫 selectedRowViewContainer 之类的。</p>
 <p><strong>突然！</strong>我又想到了一个别的方法，既然里层选中行的 View 可以获取到，而容器肯定是包含这个「选中行 View」，那我从「选中行 View」出发，一路找它的父视图，肯定可以找到哇！这种方法的<strong>代码量就少很多了。</strong></p>
 <p>经过测试，最终的代码是：</p>
-<pre><code class="objective-c">UILabel *label = (UILabel *)[pickerView viewForRow:row forComponent:component];
-UIView *container = [[[[label superview] superview] superview] superview]; // 4个 superView
-</code></pre>
-<p><img src="/../image/UIPickerView/ViewHierarchyDiagram.png"></p>
+<div class="code-wrapper"><pre><code class="hljs objc"><span class="hljs-built_in">UILabel</span> *label = (<span class="hljs-built_in">UILabel</span> *)[pickerView viewForRow:row forComponent:component];
+<span class="hljs-built_in">UIView</span> *container = [[[[label superview] superview] superview] superview]; <span class="hljs-comment">// 4个 superView</span>
+</code></pre></div>
+
+<p><img src="/../image/UIPickerView/ViewHierarchyDiagram.png" srcset="/img/loading.gif" lazyload></p>
 <p>效果是一样的</p>
-<p><img src="/../image/UIPickerView/Solved.png"></p>
+<p><img src="/../image/UIPickerView/Solved.png" srcset="/img/loading.gif" lazyload></p>
 <p>至此，文章开头说的两个问题圆满解决！🎉庆祝</p>
 <hr>
 <p>说点题外话，这个需求其实是临时加上来的，排期很紧张，我对UIPickerView 这个控件完全没有经验，就想着找一找项目里以前有没有用过，然后把它抄过来。但是一直没有解决好文章提到的第一个问题，加上隔壁 Android 的同事很快就写出来了，越写越急。其实是应该沉下心来的，认真读文档和三方库，而不是没有计划、没有章法地乱试，这个是我自己的毛病，我要改正。</p>
 <hr>
 <p>PS. 在研究这个问题的时候发现，拼多多App 中的「我的资料」页，其中的地区选择包含的 pickerView 也有这个延迟情况。</p>
-<p><img src="/../image/UIPickerView/PinDuoDuo.gif"></p>
+<p><img src="/../image/UIPickerView/PinDuoDuo.gif" srcset="/img/loading.gif" lazyload></p>
 
-    </article>
-    <!-- license -->
-    
-        <div class="license-wrapper">
-            <p>Author：<a href="http://example.com">淮</a>
-            <p>Link：<a href="http://example.com/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/">http://example.com/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/</a>
-            <p>Publish date：<a href="http://example.com/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/">August 29th 2023, 4:48:28 pm</a>
-            <p>Update date：<a href="http://example.com/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/">August 29th 2023, 5:32:00 pm</a>
-            <p>License：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>UIPickerView 如何修改选中行的样式?</div>
+      <div>http://example.com/2023/08/29/UIPickerView-如何修改选中行的样式/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>淮</div>
         </div>
-    
-    <!-- paginator -->
-    <ul class="post-paginator">
-        <li class="next">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
             
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" title="关于Cocoapods你想要了解的一切">
-                    <div class="prevTitle">关于Cocoapods你想要了解的一切</div>
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
                 </a>
+              
             
-        </li>
-    </ul>
-    <!-- comment -->
-    
-        <div class="post-comment">
-            <!-- 来必力 City 版安装代码 -->
-
-
-            
-
-            
-
-            
-
-            <!-- utteranc评论 -->
-
-
-            <!-- partial('_partial/comment/changyan') -->
-            <!--PC版-->
-
-
-            
-            
-
-            
-
+          </div>
         </div>
-    
-    <!-- timeliness note -->
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
-    
-    <!-- Mathjax -->
-    
-</main>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
 
-                <!-- profile -->
-                
-            </div>
-            <footer class="footer footer-unloaded">
-    <!-- social  -->
-    
-        <div class="social">
-            
-    
-        
-            
-                <a href="mailto:wymann_pan@foxmail.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
                     
-                    <img class="profile-qr" src="/assets/example_qr.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-
-        </div>
-    
-    <!-- powered by Hexo  -->
-    <div class="copyright">
-        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
-    </div>
-    <!-- website approve for Chinese user -->
-    
-    <!-- 不蒜子  -->
-    
-        <div class="busuanzi-container">
-            
-             
-                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
-            
-        </div>
-    	
-</footer>
-
-        </div>
-        <!-- toc -->
-        
-            <div class="toc-wrapper toc-wrapper-loding" style=
-
-
-
-
-
-
-
-    top:50vh;
-
->
-                <div class="toc-catalog">
-                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                    
+                      <a href="/2023/09/03/GestureRecognizer/" title="为了研究手势识别器，我一口气翻译了四篇文档">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">为了研究手势识别器，我一口气翻译了四篇文档</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" title="关于Cocoapods你想要了解的一切">
+                        <span class="hidden-mobile">关于Cocoapods你想要了解的一切</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">UIPickerView 如何修改选中行的样式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">选中行的样式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E8%83%8C%E6%99%AF%E9%A2%9C%E8%89%B2"><span class="toc-number">1.2.</span> <span class="toc-text">修改选中行的背景颜色</span></a></li></ol></li></ol>
+              
             </div>
-        
-        <!-- sidebar -->
-        <div class="sidebar sidebar-hide">
-    <ul class="sidebar-tabs sidebar-tabs-active-0">
-        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
-        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
-        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
-    </ul>
-    <div class="sidebar-content sidebar-content-show-archive">
-        <div class="sidebar-panel-archives">
-    <!-- 在 ejs 中将 archive 按照时间排序 -->
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
-    
-    <div class="total-and-search">
-        <div class="total-archive">
-        Total : 5
+
+            
+          </article>
         </div>
-        <!-- search  -->
-        
+      </div>
     </div>
-    
-    <div class="post-archive">
-    
-        
-            
-            
-            <div class="archive-year"> 2023 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/29</span>
-            <a class="archive-post-title" href="/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/">UIPickerView 如何修改选中行的样式?</a>
-        </li>
-    
-        
-            
-            
-                
-                </ul>
-            
-            <div class="archive-year"> 2022 </div>
-            <ul class="year-list">
-            
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/12</span>
-            <a class="archive-post-title" href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/">关于Cocoapods你想要了解的一切</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/">Hummer 的通信机制</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/">跨端框架Hummer 是如何渲染的？（iOS 版)</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/01</span>
-            <a class="archive-post-title" href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/">performSelector 详解——从 What 到 When</a>
-        </li>
-    
-    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-        <div class="sidebar-panel-tags">
-    <div class="sidebar-tags-name">
-        
-            <span class="sidebar-tag-name" data-tags="面试">
-                <span class="iconfont-archer">&#xe606;</span>
-                面试
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="iOS">
-                <span class="iconfont-archer">&#xe606;</span>
-                iOS
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="hummer">
-                <span class="iconfont-archer">&#xe606;</span>
-                hummer
-            </span>
-        
+
+
+  </aside>
+
+
     </div>
-    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
-    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
-    </div> 
-    <div class="sidebar-tags-list"></div>
+  </div>
 </div>
 
-        <div class="sidebar-panel-categories">
-    <div class="sidebar-categories-name">
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
-        <span class="sidebar-category-name" data-categories="大前端">
-            <span class="iconfont-archer">&#xe60a;</span>
-            大前端
-        </span>
+
     
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
-    <div class="sidebar-categories-list"></div>
+  </div>
 </div>
 
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
+  
+  
+  
+  
 </div>
 
-        <!-- site-meta -->
-        <script>
-    var siteMetaRoot = "/"
-    if (siteMetaRoot === "undefined") {
-        siteMetaRoot = '/'
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
     }
-    var siteMeta = {
-        url: "http://example.com",
-        root: siteMetaRoot,
-        author: "淮"
-    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
 </script>
 
-        <!-- import experimental options here -->
-        <!-- Custom Font -->
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
 
 
-        <!-- main func -->
-        <script src="/scripts/main.js?v=20211217"></script>
-        <!-- dark mode -->
-        <script src="/scripts/dark.js?v=20211217"></script>
-        <!-- fancybox -->
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
-        <!-- algolia -->
-        
-        <!-- busuanzi -->
-        
-            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
-        
-        <!-- CNZZ -->
-        
-        <!-- async load share.js -->
-        
-            <script src="/scripts/share.js?v=20211217" async></script>
-        
-        <!-- mermaid -->
-        
-    </body>
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
 </html>
