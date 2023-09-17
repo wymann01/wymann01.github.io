@@ -8,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="icon" href="/image/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -58,7 +58,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home","tag","category","about","links","page",404]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -84,7 +84,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>灵隐杂记</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="An elegant Material-Design theme for Hexo"></span>
+            <span id="subtitle" data-typed-text="散布亮光是為義人，預備喜樂是為正直人"></span>
           
         </div>
 
@@ -221,7 +221,52 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/17/iOS%20%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%862%20%E2%80%94%E2%80%94%20%E7%AE%80%E5%8D%95%E8%A7%A3%E6%9E%90%20objc_msgSend/" target="_self">
+          <img src="/image/message.jpeg" srcset="/img/loading.gif" lazyload alt="iOS 底层原理1 —— 简单解析 objc_msgSend">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/09/17/iOS%20%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%862%20%E2%80%94%E2%80%94%20%E7%AE%80%E5%8D%95%E8%A7%A3%E6%9E%90%20objc_msgSend/" target="_self">
+          iOS 底层原理1 —— 简单解析 objc_msgSend
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/09/17/iOS%20%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%862%20%E2%80%94%E2%80%94%20%E7%AE%80%E5%8D%95%E8%A7%A3%E6%9E%90%20objc_msgSend/" target="_self">
+        <div>
+          1. 初入宝地 - objc_msgSend 的作用objc_msgSend 的作用就是根据两个参数—— self 和 selector 找到 IMP、并执行 IMP  selector：selector 是 SEL 的一个实例，是方法在运行时的标识符。 IMP ：函数指针，就是函数执行的入口。 Method 对象就是函数对象，它是一个结构体，结构体包含 selector 和 IMP：   &#x
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-09-17 15:04" pubdate>
+              2023-09-17
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="【翻译】Supporting Gesture Interaction in Your Apps在 App 中支持手势互动">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/" target="_self">
@@ -230,9 +275,9 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/" target="_self">
+      <a class="index-excerpt " href="/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/" target="_self">
         <div>
-          概述手势互动是iOS 平台最直观的用户体验之一，以及Gesture Recognizer提供了简单的方法去实现它。iOS 定义了一些标准手势，同时提供了对应的Gesture Recognizer。你也可以自定义Gesture Recognizer来处理非标准的手势。本文的代码示例工程叫 pieces（片），用标准的Gesture Recognizer，为三个彩色 View 添加平移、缩放和旋转支持
+          原文地址 概述手势互动是iOS 平台最直观的用户体验之一，以及 Gesture Recognizer 提供了简单的方法去实现它。iOS 定义了一些标准手势，同时提供了对应的 Gesture Recognizer。你也可以自定义 Gesture Recognizer 来处理非标准的手势。本文的代码示例工程叫 pieces（片），用标准的Gesture Recognizer，为三个彩色 View 添加
         </div>
       </a>
 
@@ -254,7 +299,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/" target="_self">
@@ -263,9 +314,9 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/" target="_self">
+      <a class="index-excerpt " href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/" target="_self">
         <div>
-          https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer/about_the_gesture_recognizer_state_machine?language=objc —-学习Gesture Recognizer底层的
+          原文地址 —-学习Gesture Recognizer底层的state 和 state 的转变。 概述Gesture Recognizer被状态机驱动（state machine），UIKit也用 ta 来保证正确处理事件。状态机决定了几个重要的行为：  Gesture Recognizer是否被允许进入UIGestureRecognizerStateBegan 状态？ Gesture Recog
         </div>
       </a>
 
@@ -287,18 +338,24 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="【翻译】Implementing a custom gesture recognizer 实现自定义的手势识别器">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" target="_self">
-          【翻译】Implementing a custom gesture recognizer实现自定义的手势识别器
+          【翻译】Implementing a custom gesture recognizer 实现自定义的手势识别器
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" target="_self">
+      <a class="index-excerpt " href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" target="_self">
         <div>
-          ——探索「什么时候」以及如何打造自定义的 Gesture Recognizer 。 概述当 UIKi 内置的 Gesture Recognizer 不能满足需求时，你就可以自定义一个。UIKit包含了高度可配置的 Gesture Recognizer ，可以处理轻击tap、长按long press、拖动pan、滑动 swipe、旋转rotation和捏合pinch的 touch 序列。 对于其他的
+          ——探索「什么时候」以及如何打造自定义的 Gesture Recognizer 。 概述当 UIKit 内置的 Gesture Recognizer 不能满足需求时，你就可以自定义一个。UIKit包含了高度可配置的 Gesture Recognizer ，可以处理轻击 tap、长按 long press、拖动 pan、滑动 swipe、旋转 rotation 和捏合 pinch 的 touch 序
         </div>
       </a>
 
@@ -320,7 +377,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/03/%5B%E7%BF%BB%E8%AF%91%5DHandling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="【翻译】Handling UIKit gestures 处理 UIkit 的 gesture">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/09/03/%5B%E7%BF%BB%E8%AF%91%5DHandling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/" target="_self">
@@ -329,9 +392,9 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/03/%5B%E7%BF%BB%E8%AF%91%5DHandling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/" target="_self">
+      <a class="index-excerpt " href="/2023/09/03/%5B%E7%BF%BB%E8%AF%91%5DHandling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/" target="_self">
         <div>
-          ——使用Gesture  Recognizer来简化Touch处理和打造统一的用户体验 概述Gesture  Recognizer是处理点击和长按事件的最简单方法，你可以把一个或者几个Gesture  Recognizer附加到任何view上，它封装了处理和解释事件的所有逻辑，并把它们匹配到已知的模式。当检测到匹配，Gesture  Recognizer会通知特定对象，这个对象可以是view co
+          ——使用Gesture  Recognizer来简化Touch处理和打造统一的用户体验文档原文地址 概述Gesture  Recognizer是处理点击和长按事件的最简单方法，你可以把一个或者几个Gesture  Recognizer附加到任何view上，它封装了处理和解释事件的所有逻辑，并把它们匹配到已知的模式。当检测到匹配，Gesture  Recognizer会通知特定对象，这个对象可以是v
         </div>
       </a>
 
@@ -353,7 +416,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/03/GestureRecognizer/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="为了研究手势识别器，我一口气翻译了四篇文档">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/09/03/GestureRecognizer/" target="_self">
@@ -362,7 +431,7 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/03/GestureRecognizer/" target="_self">
+      <a class="index-excerpt " href="/2023/09/03/GestureRecognizer/" target="_self">
         <div>
           Handling UIKit gestures 处理 UIKit 的手势  引出 Gesture Recognizer，介绍了 ta 有哪些类型，以及怎么配置一个 Gesture Recognizer。文章不长。  Implementing a custom gesture recognizer 实现自定义的 Gesture Recognizer  给出了一个自定义 Gesture Recogn
         </div>
@@ -386,7 +455,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="UIPickerView 如何修改选中行的样式?">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/" target="_self">
@@ -395,7 +470,7 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/" target="_self">
+      <a class="index-excerpt " href="/2023/08/29/UIPickerView-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%80%89%E4%B8%AD%E8%A1%8C%E7%9A%84%E6%A0%B7%E5%BC%8F/" target="_self">
         <div>
           UIPickerView 如何修改选中行的样式 本文会介绍两个我在使用 UIPickerView 时遇到的问题, 最后给出它们的解决方法：  如何无延迟地更新选中行的样式？ 如何修改选中行的背景颜色？  选中行的样式需求中，要求更改选中行的字体颜色和字重，加粗+变色。我一开始尝试在「选中回调函数pickerView:didSelectRow:inComponent: 」 这个回调函数中，获取当前选
         </div>
@@ -419,7 +494,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="关于Cocoapods你想要了解的一切">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" target="_self">
@@ -428,7 +509,7 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" target="_self">
+      <a class="index-excerpt " href="/2022/09/12/%E5%85%B3%E4%BA%8ECocoapods%E4%BD%A0%E6%83%B3%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E4%B8%80%E5%88%87/" target="_self">
         <div>
           前言CocoaPods 是我现在每天使用的第三方依赖管理库，精通pod install ，pod install —repo update ，删除 Podfile.lock文件等操作。 我从没觉得这有什么了不起的。直到在一次面试中字节跳动的面试官问我：CocoaPods 的原理是什么？ 像我这样年轻的程序员不应该满足于完成日常开发任务，了解下 CocoaPods吧。 CocoaPods 为什么可
         </div>
@@ -459,7 +540,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="Hummer 的通信机制">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/" target="_self">
@@ -468,7 +555,7 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/" target="_self">
+      <a class="index-excerpt " href="/2022/07/25/Hummer%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6/" target="_self">
         <div>
           —— 一个跨端框架应该要怎么通信？ 世界上有很多跨端框架，有自己把底层渲染的工作都包了的，那个叫 Flutter，有那种把小程序装进 App，用 Webview 搞定页面的，用小程序框架来实现跨端的，这个滴滴内部自研有一个，叫星河。 还有一种更为常见，就是在 Android 和 iOS 都实现一套 UI和基础类，然后开发者只需要编写一套业务代码就能给两端用，这种有ReactNative，Weex，
         </div>
@@ -492,7 +579,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" target="_self">
+          <img src="/img/chair.png" srcset="/img/loading.gif" lazyload alt="跨端框架Hummer 是如何渲染的？（iOS 版)">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
         <a href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" target="_self">
@@ -501,7 +594,7 @@
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" target="_self">
+      <a class="index-excerpt " href="/2022/07/25/%E8%B7%A8%E7%AB%AF%E6%A1%86%E6%9E%B6Hummer%20%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93%E7%9A%84%EF%BC%9F%EF%BC%88iOS%20%E7%89%88%EF%BC%89/" target="_self">
         <div>
           Hummer是目前滴滴货运司机端正在使用的跨端框架，之前在开发需求的时候碰到了诡异的布局问题，由于自己是刚接触，完全不知道从哪里下手排查问题，于是请来了兄弟部门 Hummer iOS 现在的维护者史广远，看着他一步一步地打断点，打日志，最终成功定位问题，给出了解决方案。心里敬佩得很。 所以既为了以后开发能够有独立排查问题的能力，也为了提高自己对于跨端技术的理解，这就来整理了下Hummer 的渲染机
         </div>
@@ -550,47 +643,13 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/" target="_self">
-          performSelector 详解——从 What 到 When
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/05/01/performSelector%20%E8%AF%A6%E8%A7%A3%E2%80%94%E2%80%94%E4%BB%8E%20What%20%E5%88%B0%20When/" target="_self">
-        <div>
-          缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-05-01 22:55" pubdate>
-              2022-05-01
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%9D%A2%E8%AF%95/">#面试</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
 
 
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
 
 
 

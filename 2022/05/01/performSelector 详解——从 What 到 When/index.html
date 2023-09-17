@@ -8,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="icon" href="/image/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -24,7 +24,7 @@
 <meta property="og:description" content="缘起我最近被一位面试官问：  performSelector 是我们常用的方法，能不能从 runloop 的角度说说？  performSelector 跟我们直接调用一个方法有什么区别？   一下子就把我搞蒙了，转型 iOS 开发半年，编码量少，连performSelector 都没用过，最多在项目代码里读到，只知道大概是干嘛的，现在马上来搞懂它！ performSelector 是我们常用的方">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-01T14:55:14.000Z">
-<meta property="article:modified_time" content="2022-09-12T07:54:39.911Z">
+<meta property="article:modified_time" content="2023-09-12T14:45:28.821Z">
 <meta property="article:author" content="淮">
 <meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary_large_image">
@@ -69,7 +69,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home","tag","category","about","links","page",404]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -95,7 +95,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>灵隐杂记</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="performSelector 详解——从 What 到 When"></span>
+            <span id="subtitle">performSelector 详解——从 What 到 When</span>
           
         </div>
 
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.5k 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          29 分钟
+          30 分钟
         
       </span>
     
@@ -285,31 +285,32 @@
 <p>这个方法的入参是一个 selector，selector 属于 SEL类型，用来代表一个函数，实际上是一个 C 的 string。打印一个 selector 会得到对应方法的名字。详见<a href="https://developer.apple.com/documentation/objectivec/sel" title="官方文档">官方文档</a>。</p>
 </blockquote>
 <p>这里他要问的其实是<code>performSelector:withObject:afterDelay</code> 方法（Apple文档在<a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector/" title="这里">这里</a>），只有这个才跟 runloop 有关系。这个方法会生成一个定时器Timer，并把它添加到当前线程的 Runloop 上，到了预定时间后 Runloop 好去执行对应的 selector （即执行方法）。</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">
-+(void)performSelectorInMainThread &#123;
-    dispatch_async(dispatch_get_main_queue(), ^&#123;
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
+<div class="code-wrapper"><pre><code class="hljs objc">
++ (<span class="hljs-type">void</span>)performSelectorInMainThread &#123;
+    <span class="hljs-built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;
+        [<span class="hljs-keyword">self</span> performSelector:<span class="hljs-keyword">@selector</span>(test) withObject:<span class="hljs-literal">nil</span> afterDelay:<span class="hljs-number">1.0</span>];
     &#125;);
 &#125;
 
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
++ (<span class="hljs-type">void</span>)test &#123;
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;This is test method&quot;</span>);
 &#125;</code></pre></div>
 
+<p>默认是 NSDefaultRunLoopMode，当传入的时间间隔到的时候，就检查当前 runloop 是否是那个 mode，如果是就会成功执行。如果不是，那么就要等一等，等 runloop 的 mode 匹配。</p>
 <p>注意：如果是在<strong>子线程</strong>中调用performSelector:withObject:afterDelay 方法，那就得手动获取一下 runloop，同时得让子线程中的 runloop 处于 run 状态。<strong>因为子线程中的 Runloop 不是默认创建，更不会默认 Run 起来。</strong></p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">+(void)performSelectorInOtherThread &#123;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;
-        NSLog(@&quot;1&quot;);
-        NSRunLoop *runloop = [NSRunLoop currentRunLoop]; // 注释这句,则不会执行 test 方法
-        [self performSelector:@selector(test) withObject:nil afterDelay:1.0];
-        [runloop run];// 注释这句,也不会执行 test 方法； 
-        //同时，这句需要放在 performSelector 后面，对应的 timer 才会被添加到 Runloop 中
-        NSLog(@&quot;3&quot;);
+<div class="code-wrapper"><pre><code class="hljs objc">+ (<span class="hljs-type">void</span>)performSelectorInOtherThread &#123;
+    <span class="hljs-built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="hljs-number">0</span>), ^&#123;
+        <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;1&quot;</span>);
+        <span class="hljs-built_in">NSRunLoop</span> *runloop = [<span class="hljs-built_in">NSRunLoop</span> currentRunLoop]; <span class="hljs-comment">// 注释这句,则不会执行 test 方法</span>
+        [<span class="hljs-keyword">self</span> performSelector:<span class="hljs-keyword">@selector</span>(test) withObject:<span class="hljs-literal">nil</span> afterDelay:<span class="hljs-number">1.0</span>];
+        [runloop run];<span class="hljs-comment">// 注释这句,也不会执行 test 方法； </span>
+        <span class="hljs-comment">//同时，这句需要放在 performSelector 后面，对应的 timer 才会被添加到 Runloop 中</span>
+        <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;3&quot;</span>);
     &#125;);
 &#125;
 
-+(void)test &#123;
-    NSLog(@&quot;This is test method&quot;);
++ (<span class="hljs-type">void</span>)test &#123;
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;This is test method&quot;</span>);
 &#125;</code></pre></div>
 
 <blockquote>
@@ -317,11 +318,11 @@
 </blockquote>
 <h2 id="performSelector-跟我们直接调用一个方法有什么区别？"><a href="#performSelector-跟我们直接调用一个方法有什么区别？" class="headerlink" title="performSelector 跟我们直接调用一个方法有什么区别？"></a>performSelector 跟我们直接调用一个方法有什么区别？</h2><p><code>performSelector</code>是运行时决议的，用<code>performSelector</code> 可以到运行时才决定要执行哪个方法，因此编译器不会检查 <code>performSelector</code>的入参所代表的<strong>方法</strong>是否已经被 <code>caller</code> 对象实现。（因此，这时你可以在「不 import 头文件」的情况下调用方法）</p>
 <p>而对于一般的方法调用，编译器会严格把控当前 caller 是否实现了该方法，如果没有，根本过不了编译。</p>
-<p>这就类似于 Java 语言中的「反射」机制。</p>
+<p>这就类似于KVC，Key-Value-Coding，用一个字符串去调用一个函数。</p>
 <h2 id="performSelector-的使用"><a href="#performSelector-的使用" class="headerlink" title="performSelector 的使用"></a>performSelector 的使用</h2><p>因为对应的 selector 有可能实现，也可能没实现，所以它尝尝跟<code>respondsToSelector:</code> 搭配使用，如下代码：</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 检查 self 对象是否实现了 test 方法
-if([self respondsToSelector:@selector(test)]) &#123;
-    [self performSelector:@selector(test)];
+<div class="code-wrapper"><pre><code class="hljs objc"><span class="hljs-comment">// 检查 self 对象是否实现了 test 方法</span>
+<span class="hljs-keyword">if</span>([<span class="hljs-keyword">self</span> respondsToSelector:<span class="hljs-keyword">@selector</span>(test)]) &#123;
+    [<span class="hljs-keyword">self</span> performSelector:<span class="hljs-keyword">@selector</span>(test)];
 &#125;</code></pre></div>
 
 <p>另外，根据 Apple 的文档描述，performSelector 可能会带来内存管理问题：</p>
@@ -333,15 +334,15 @@ if([self respondsToSelector:@selector(test)]) &#123;
 <li><p>动态化和组件化</p>
 </li>
 <li><p>多线程</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">// 主线程
-- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array;
+<div class="code-wrapper"><pre><code class="hljs objc"><span class="hljs-comment">// 主线程</span>
+- (<span class="hljs-type">void</span>)performSelectorOnMainThread:(SEL)aSelector withObject:(<span class="hljs-keyword">nullable</span> <span class="hljs-type">id</span>)arg waitUntilDone:(<span class="hljs-type">BOOL</span>)wait modes:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSString</span> *&gt; *)array;
 
-// 子线程
-- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray&lt;NSString *&gt; *)array
+<span class="hljs-comment">// 子线程</span>
+- (<span class="hljs-type">void</span>)performSelector:(SEL)aSelector onThread:(<span class="hljs-built_in">NSThread</span> *)thr withObject:(<span class="hljs-keyword">nullable</span> <span class="hljs-type">id</span>)arg waitUntilDone:(<span class="hljs-type">BOOL</span>)wait modes:(<span class="hljs-keyword">nullable</span> <span class="hljs-built_in">NSArray</span>&lt;<span class="hljs-built_in">NSString</span> *&gt; *)array
 </code></pre></div>
 </li>
 <li><p>延后执行</p>
-<div class="code-wrapper"><pre><code class="hljs objective-c">[self performSelector:@selector(test) withObject:nil afterDelay:1.0];
+<div class="code-wrapper"><pre><code class="hljs objc">[<span class="hljs-keyword">self</span> performSelector:<span class="hljs-keyword">@selector</span>(test) withObject:<span class="hljs-literal">nil</span> afterDelay:<span class="hljs-number">1.0</span>];
 </code></pre></div></li>
 </ul>
 <hr>
@@ -561,21 +562,6 @@ if([self respondsToSelector:@selector(test)]) &#123;
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
 
 
 

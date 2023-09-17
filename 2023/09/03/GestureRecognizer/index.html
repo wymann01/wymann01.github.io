@@ -8,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="icon" href="/image/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -24,7 +24,7 @@
 <meta property="og:description" content="Handling UIKit gestures 处理 UIKit 的手势  引出 Gesture Recognizer，介绍了 ta 有哪些类型，以及怎么配置一个 Gesture Recognizer。文章不长。  Implementing a custom gesture recognizer 实现自定义的 Gesture Recognizer  给出了一个自定义 Gesture Recogn">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-03T03:56:21.000Z">
-<meta property="article:modified_time" content="2023-09-03T03:57:12.701Z">
+<meta property="article:modified_time" content="2023-09-04T01:22:38.948Z">
 <meta property="article:author" content="淮">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -68,7 +68,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home","tag","category","about","links","page",404]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -94,7 +94,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>灵隐杂记</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -196,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="为了研究手势识别器，我一口气翻译了四篇文档"></span>
+            <span id="subtitle">为了研究手势识别器，我一口气翻译了四篇文档</span>
           
         </div>
 
@@ -273,16 +273,16 @@
               <div class="markdown-body">
                 
                 <ol>
-<li><p>Handling UIKit gestures 处理 UIKit 的手势</p>
+<li><p><a href="https://wymann01.github.io/2023/09/03/%5B%E7%BF%BB%E8%AF%91%5DHandling%20UIKit%20gestures%20%E5%A4%84%E7%90%86%20UIkit%20%E7%9A%84%20gesture/"><code>Handling UIKit gestures 处理 UIKit 的手势</code></a></p>
 <p> 引出 Gesture Recognizer，介绍了 ta 有哪些类型，以及怎么配置一个 Gesture Recognizer。文章不长。</p>
 </li>
-<li><p>Implementing a custom gesture recognizer 实现自定义的 Gesture Recognizer</p>
+<li><p><a href="https://wymann01.github.io/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/"><code>Implementing a custom gesture recognizer 实现自定义的 Gesture Recognizer</code></a></p>
 <p> 给出了一个自定义 Gesture Recognizer的 demo，同时也说了如果要自定义的话需要实现哪些方法。</p>
 </li>
-<li><p><strong>About the Gesture Recognizer State Machine 关于手势识别器的状态机</strong></p>
+<li><p><strong><a href="https://wymann01.github.io/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/"><code>About the Gesture Recognizer State Machine 关于手势识别器的状态机</code></a></strong></p>
 <p> 介绍了 Gesture Recognizer的 state 属性。不同类型的 Gesture Recognizer怎么使用 state 属性，如何取消手势识别，以及最终如何重置 Gesture Recognizer。都是围绕 state 的变化讨论的，推荐。</p>
 </li>
-<li><p><strong>Supporting Gesture Interaction in Your Apps 在 App 中支持手势互动</strong></p>
+<li><p><strong><a href="https://wymann01.github.io/2023/09/04/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Supporting%20Gesture%20Interaction%20in%20Your%20Apps%E5%9C%A8%20App%20%E4%B8%AD%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E4%BA%92%E5%8A%A8/"><code>Supporting Gesture Interaction in Your Apps 在 App 中支持手势互动</code></a></strong></p>
 <p> 用一个示例工程 pieces，介绍了如何处理平移、捏合和旋转手势，以及怎么让手势同时工作，最后是介绍了如何自定义一个 Gesture Recognizer处理非标准的手势</p>
 </li>
 </ol>
@@ -493,21 +493,6 @@
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
 
 
 

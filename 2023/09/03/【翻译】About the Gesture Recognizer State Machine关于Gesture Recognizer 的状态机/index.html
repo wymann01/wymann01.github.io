@@ -8,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="icon" href="/image/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -16,20 +16,20 @@
   <meta name="author" content="淮">
   <meta name="keywords" content="">
   
-    <meta name="description" content="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;uikit&#x2F;touches_presses_and_gestures&#x2F;implementing_a_custom_gesture_recognizer&#x2F;about_the_gesture_recognizer_state_machine?language&#x3D;objc —-学习Gesture Recognizer底层的">
+    <meta name="description" content="原文地址 —-学习Gesture Recognizer底层的state 和 state 的转变。 概述Gesture Recognizer被状态机驱动（state machine），UIKit也用 ta 来保证正确处理事件。状态机决定了几个重要的行为：  Gesture Recognizer是否被允许进入UIGestureRecognizerStateBegan 状态？ Gesture Recog">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机">
 <meta property="og:url" content="http://example.com/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91About%20the%20Gesture%20Recognizer%20State%20Machine%E5%85%B3%E4%BA%8EGesture%20Recognizer%20%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA/index.html">
 <meta property="og:site_name" content="湖中焉得更有此人">
-<meta property="og:description" content="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;uikit&#x2F;touches_presses_and_gestures&#x2F;implementing_a_custom_gesture_recognizer&#x2F;about_the_gesture_recognizer_state_machine?language&#x3D;objc —-学习Gesture Recognizer底层的">
+<meta property="og:description" content="原文地址 —-学习Gesture Recognizer底层的state 和 state 的转变。 概述Gesture Recognizer被状态机驱动（state machine），UIKit也用 ta 来保证正确处理事件。状态机决定了几个重要的行为：  Gesture Recognizer是否被允许进入UIGestureRecognizerStateBegan 状态？ Gesture Recog">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://secure2.wostatic.cn/static/5EGB4JaPaWFc7LK2g9xT3d/image.png?auth_key=1693715005-fAcm71zDWMHZehaSz6iX9j-0-5977b7bfcc3b495a98d185e181d2892c">
-<meta property="og:image" content="https://secure2.wostatic.cn/static/xxxm1dG58kaEb4bK7qePmr/image.png?auth_key=1693715005-qoz8EvKnTY2G6cJ6ZJX7E4-0-0b20b66d4721d9c2b37529605dcd9a68">
+<meta property="og:image" content="http://example.com/image/GestureRecognizer/state.png">
+<meta property="og:image" content="http://example.com/image/GestureRecognizer/continuousState.png">
 <meta property="article:published_time" content="2023-09-03T04:24:47.000Z">
-<meta property="article:modified_time" content="2023-09-03T04:25:43.590Z">
+<meta property="article:modified_time" content="2023-09-05T02:36:37.761Z">
 <meta property="article:author" content="淮">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://secure2.wostatic.cn/static/5EGB4JaPaWFc7LK2g9xT3d/image.png?auth_key=1693715005-fAcm71zDWMHZehaSz6iX9j-0-5977b7bfcc3b495a98d185e181d2892c">
+<meta name="twitter:image" content="http://example.com/image/GestureRecognizer/state.png">
   
   
   
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home","tag","category","about","links","page",404]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -97,7 +97,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>灵隐杂记</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机"></span>
+            <span id="subtitle">【翻译】About the Gesture Recognizer State Machine关于Gesture Recognizer 的状态机</span>
           
         </div>
 
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          2.4k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          22 分钟
+          20 分钟
         
       </span>
     
@@ -275,27 +275,27 @@
             
               <div class="markdown-body">
                 
-                <p><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer/about_the_gesture_recognizer_state_machine?language=objc">https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer/about_the_gesture_recognizer_state_machine?language=objc</a></p>
+                <p><a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer/about_the_gesture_recognizer_state_machine?language=objc"><code>原文地址</code></a></p>
 <p>—-学习Gesture Recognizer底层的state 和 state 的转变。</p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Gesture Recognizer被状态机驱动（<strong>state machine</strong>），UIKit也用 ta 来保证正确处理事件。状态机决定了几个重要的行为：</p>
 <ul>
-<li>Gesture Recognizer是否被允许进入<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatebegan?language=objc"><code>UIGestureRecognizerStateBegan</code></a> 状态。</li>
-<li>Gesture Recognizer是否被允许进入<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a>状态。（这个是 end，上面的是 began）</li>
+<li>Gesture Recognizer是否被允许进入<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatebegan?language=objc"><code>UIGestureRecognizerStateBegan</code></a> 状态？</li>
+<li>Gesture Recognizer是否被允许进入<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a>状态？（这个是 end，上面的是 began）</li>
 <li>什么时候调用action 函数？</li>
 </ul>
-<p>自定义一个 Gesture Recognizer 时，你必须在合适的时候更新状态机。一个 Gesture Recognizer 永远都是从<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatepossible?language=objc"><code>UIGestureRecognizerStatePossible</code></a>开始，表示 ta已经准备好可以处理事件了。分离的和连续的 Gesture Recognizer 会经过不同的路径到达<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a>, <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatefailed?language=objc"><code>UIGestureRecognizerStateFailed</code></a>, 或者<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatecancelled?language=objc"><code>UIGestureRecognizerStateCancelled</code></a> 状态，Gesture Recognizer 会待在这几个状态之一，知道事件序列结束。</p>
-<p>最后，UIKit 会重置Gesture Recognizer ，并让它回到<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatepossible?language=objc"><code>UIGestureRecognizerStatePossible</code></a>状态。</p>
-<h1 id="分离的Gesture-Recognizer-的状态转变"><a href="#分离的Gesture-Recognizer-的状态转变" class="headerlink" title="分离的Gesture Recognizer 的状态转变"></a><strong>分离的Gesture Recognizer 的状态转变</strong></h1><p>对于自定义的、分离的Gesture Recognizer ，ta 有两种状态<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a> 或 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatefailed?language=objc"><code>UIGestureRecognizerStateFailed</code></a>。下图展示了它的转变路径。当不断到来的事件匹配到了你写的手势，识别器会转到<code>UIGestureRecognizerStateEnded</code>，当匹配失败时，转到<code>UIGestureRecognizerStateFailed</code>。</p>
-<p><img src="https://secure2.wostatic.cn/static/5EGB4JaPaWFc7LK2g9xT3d/image.png?auth_key=1693715005-fAcm71zDWMHZehaSz6iX9j-0-5977b7bfcc3b495a98d185e181d2892c" srcset="/img/loading.gif" lazyload></p>
+<p>自定义一个 Gesture Recognizer 时，你必须在合适的时候更新状态机。一个 Gesture Recognizer 永远都是从<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatepossible?language=objc"><code>UIGestureRecognizerStatePossible</code></a>开始，表示 ta已经准备好可以处理事件了。分离的和连续的 Gesture Recognizer 会经过不同的路径到达<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a>, <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatefailed?language=objc"><code>UIGestureRecognizerStateFailed</code></a>, 或者<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatecancelled?language=objc"><code>UIGestureRecognizerStateCancelled</code></a> 状态，Gesture Recognizer 会待在这几个状态之一，直到事件序列结束。</p>
+<p>最后，UIKit 会重置 Gesture Recognizer ，并让它回到 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatepossible?language=objc"><code>UIGestureRecognizerStatePossible</code></a>状态。</p>
+<h1 id="分离型-Gesture-Recognizer-的状态转变"><a href="#分离型-Gesture-Recognizer-的状态转变" class="headerlink" title="分离型 Gesture Recognizer 的状态转变"></a><strong>分离型 Gesture Recognizer 的状态转变</strong></h1><p>对于自定义的、分离的Gesture Recognizer ，ta 有两种状态<a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstateended?language=objc"><code>UIGestureRecognizerStateEnded</code></a> 或 <a href="https://developer.apple.com/documentation/uikit/uigesturerecognizerstate/uigesturerecognizerstatefailed?language=objc"><code>UIGestureRecognizerStateFailed</code></a>。下图展示了它的转变路径。当不断到来的事件匹配到了你写的手势，识别器会转到<code>UIGestureRecognizerStateEnded</code>，当匹配失败时，转到<code>UIGestureRecognizerStateFailed</code>。</p>
+<p><img src="/../image/GestureRecognizer/state.png" srcset="/img/loading.gif" lazyload alt="分离型 Gesture Recognizer 的状态变化路径"></p>
 <blockquote>
 <p>图文似乎有点不符，右侧圆圈内应为「Ended」。</p>
 </blockquote>
 <p>当转到结束的状态时（<code>UIGestureRecognizerStateEnded</code>），UIKit会调用所有关联目标对象的 action 函数。</p>
 <p>如果转到的是失败的状态（<code>UIGestureRecognizerStateFailed</code>），不调用任何函数。</p>
 <p>想了解实际例子的，请看<a href="https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/implementing_a_custom_gesture_recognizer/implementing_a_discrete_gesture_recognizer?language=objc">「实现一个分离的Gesture Recognizer</a>」 。</p>
-<p><strong>连续的的Gesture Recognizer 的状态转变</strong></p>
+<p><strong>连续的 Gesture Recognizer 的状态转变</strong></p>
 <p>先看图</p>
-<p><img src="https://secure2.wostatic.cn/static/xxxm1dG58kaEb4bK7qePmr/image.png?auth_key=1693715005-qoz8EvKnTY2G6cJ6ZJX7E4-0-0b20b66d4721d9c2b37529605dcd9a68" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../image/GestureRecognizer/continuousState.png" srcset="/img/loading.gif" lazyload alt="连续型 Gesture Recognizer 的状态变化路径"></p>
 <ul>
 <li>初始的事件序列会将Gesture Recognizer 转到</li>
 </ul>
@@ -390,8 +390,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" title="【翻译】Implementing a custom gesture recognizer实现自定义的手势识别器">
-                        <span class="hidden-mobile">【翻译】Implementing a custom gesture recognizer实现自定义的手势识别器</span>
+                      <a href="/2023/09/03/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91Implementing%20a%20custom%20gesture%20recognizer%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E5%99%A8/" title="【翻译】Implementing a custom gesture recognizer 实现自定义的手势识别器">
+                        <span class="hidden-mobile">【翻译】Implementing a custom gesture recognizer 实现自定义的手势识别器</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -523,21 +523,6 @@
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
 
 
 
